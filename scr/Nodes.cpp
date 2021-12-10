@@ -65,7 +65,13 @@ Object* NodesCoreClass::run(ClassObject* in, MethodObjectArgument* args) {
 		}
 
 		std::string cmd;
-		std::getline(std::cin, cmd);
+		std::string line;
+		
+		do {
+			cmd += line + "\n";
+			std::getline(std::cin, line);
+		} while (line != "end");
+
 		string cmd_out;
 		cmd_out = cmd.c_str();
 

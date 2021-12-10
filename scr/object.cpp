@@ -73,3 +73,24 @@ Object* ndo_cast(const Object* in, const ObjectType* to_type) {
 	}
 	return NULL;
 }
+
+void object_types::set(Object* self, alni val) {
+	if (self->type->convesions && self->type->convesions->from_int) {
+		self->type->convesions->from_int(self, val);
+		return;
+	}
+}
+
+void object_types::set(Object* self, alnf val) {
+	if (self->type->convesions && self->type->convesions->from_float) {
+		self->type->convesions->from_float(self, val);
+		return;
+	}
+}
+
+void object_types::set(Object* self, constring val) {
+	if (self->type->convesions && self->type->convesions->from_string) {
+		self->type->convesions->from_string(self, val);
+		return;
+	}
+}

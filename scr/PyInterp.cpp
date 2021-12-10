@@ -3,10 +3,34 @@
 
 #include "PyNdo.h"
 
+#include "object.h"
+
 PyObject* pModule;
 
-static PyMethodDef ModuleMethods[] = { {NULL, NULL} };
-static struct PyModuleDef cModPyDem = { PyModuleDef_HEAD_INIT, "ndo", "", -1, ModuleMethods };
+PyObject* ndo_create_object(PyObject* self, PyObject* args) {
+
+	const char* arg;
+	if (!PyArg_ParseTuple(args, "s", &arg)) {
+		return NULL;
+	}
+
+	constring name = arg;
+
+	Object* out = NDO.create(name);
+	
+	if (!out) {
+		return NULL;
+	}
+
+	return PyEmbObject_New(out);
+}
+
+static PyMethodDef ModuleMethods[] = { 
+	{"ndo_create", ndo_create_object, METH_VARARGS, "creates nd object of type"},
+	{NULL, NULL} 
+};
+
+static struct PyModuleDef cModPyDem = { PyModuleDef_HEAD_INIT, "npy", "", -1, ModuleMethods };
 
 PyMODINIT_FUNC PyInit_cModPyDem() {
 	return PyModule_Create(&cModPyDem);
@@ -16,7 +40,7 @@ PyInterp::PyInterp() {
 
 	const char* stdOutErr =
 "import sys\n\
-import ndo\n\
+import npy\n\
 class CatchOut:\n\
 	def __init__(self):\n\
 			self.value = ''\n\
@@ -31,7 +55,7 @@ sys.stderr = catchOut\n\
 
 	Py_SetPythonHome(L"D:/dev/src/python310");
 
-	PyImport_AppendInittab("ndo", PyInit_cModPyDem);
+	PyImport_AppendInittab("npy", PyInit_cModPyDem);
 
 	Py_Initialize();
 

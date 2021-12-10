@@ -76,8 +76,81 @@ static PyObject* EmbObj_call(PyObject* self, PyObject* args) {
 	return PyEmbObject_New(ndo_out);
 }
 
+static PyObject* EmbObj_set(PyObject* self, PyObject* args) {
+	PyObject* arg;
+
+	if (!PyArg_ParseTuple(args, "O", &arg)) {
+		return NULL;
+	}
+
+	string arg_type = arg->ob_type->tp_name;
+
+	Object* ndo = ((Py_EmbObj*)self)->ndo_ptr;
+
+	if (arg_type == "int") {
+		long val = PyLong_AsLong(arg);
+		NDO.set(ndo, (alni)val);
+	}
+	else if (arg_type == "float") {
+		float val = PyFloat_AsDouble(arg);
+		NDO.set(ndo, val);
+	}
+	else if (arg_type == "str") {
+		const char* val = PyUnicode_AsUTF8(arg);
+		string str = val;
+		NDO.set(ndo, val);
+	}
+	else if (arg_type == "bool") {
+		long val = PyLong_AsLong(arg);
+		NDO.set(ndo, (alni)val);
+	}
+
+	return PyLong_FromLong(0);
+}
+
+static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
+	
+	PyObject* arg_name;
+	PyObject* arg_ndo;
+	
+	constring name;
+	Object* ndo_child;
+
+	if (!PyArg_ParseTuple(args, "OO", &arg_name, &arg_ndo)) {
+		return NULL;
+	}
+	if (constring("str") != arg_name->ob_type->tp_name) {
+		return NULL;
+	}
+	if (constring("EmbObj") != arg_ndo->ob_type->tp_name) {
+		return NULL;
+	}
+
+	
+	name.str = PyUnicode_AsUTF8(arg_name);
+	ndo_child = ((Py_EmbObj*)arg_ndo)->ndo_ptr;
+
+	Object* ndo = ((Py_EmbObj*)self)->ndo_ptr;
+
+	if (ndo->type != &ClassObjectType) {
+		return NULL;
+	}
+
+	// FIXME!!!!
+	string bad;
+	bad = name.str;
+
+	((ClassObject*)ndo)->members->items.Put(bad.str, ndo_child);
+
+	bad.str = 0;
+
+	return PyLong_FromLong(0);
+}
+
 static PyMethodDef Emb_methods[] = {
+	{"add_child", EmbObj_add_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"child", EmbObj_get_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"set", EmbObj_set, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"call", EmbObj_call, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{NULL, NULL},
 };

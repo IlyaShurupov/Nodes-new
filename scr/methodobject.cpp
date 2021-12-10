@@ -32,6 +32,26 @@ Object* MethodObject::operator()(MethodObjectArgument* args) {
 	return NULL;
 }
 
+void MethodObject::from_string(Object* in, constring code) {
+	NDO_CASTV(MethodObject, in, self);
+	self->code_flags = 1;
+
+	// FIXME!!!
+	string bad;
+	bad = code.str;
+	self->code = (void*)bad.str;
+	bad.str = 0;
+}
+
+struct ObjectTypeConversions MethodTypeConversions = {
+	NULL,
+	NULL,
+	MethodObject::from_string,
+	NULL,
+	NULL,
+	NULL,
+};
+
 struct ObjectType MethodObjectType = {
 	.base = NULL,
 	.constructor = MethodObject::constructor,
@@ -39,4 +59,5 @@ struct ObjectType MethodObjectType = {
 	.copy = MethodObject::copy,
 	.size = sizeof(MethodObject),
 	.name = "method",
+	.convesions = &MethodTypeConversions,
 };

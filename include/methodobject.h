@@ -20,6 +20,8 @@ struct MethodObject : Object {
 	static void copy(Object* self, const Object* in);
 
 	Object* operator()(MethodObjectArgument* args);
+
+	static void from_string(Object* self, constring in);
 };
 
 extern ObjectType MethodObjectType;
