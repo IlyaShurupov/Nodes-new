@@ -1,37 +1,13 @@
+#pragma once
 
 #include "object.h"
 
 struct DictObject : Object {
 	hmap<Object*, constring> items;
 
-	static void copy(Object* self, Object* in) {
-		CCAST(DictObject, self)->items = CCAST(DictObject, in)->items;
-	}
-
-	static void destructor(Object* self) {
-		CCASTV(DictObject, self, dict);
-
-		for (auto item : dict->items) {
-			NDO.destroy(item->val);
-		}
-
-		dict->items.clear();
-	}
-
-	static void constructor(Object* self) {
-		CCASTV(DictObject, self, dict);
-
-		new (&dict->items) hmap<Object*, constring>();
-
-		dict->items.del_values = false;
-	}
+	static void copy(Object* self, const Object* in);
+	static void destructor(Object* self);
+	static void constructor(Object* self);
 };
 
-struct ObjectType DictType = {
-	.base = NULL,
-	.constructor = DictObject::constructor,
-	.destructor = DictObject::destructor,
-	.copy = DictObject::copy,
-	.size = sizeof(DictObject),
-	.name = "dict",
-};
+extern ObjectType DictObjectType;

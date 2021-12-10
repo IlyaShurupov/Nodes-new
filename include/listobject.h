@@ -3,13 +3,13 @@
 
 #include "object.h"
 
-struct IntObject : Object {
-	alni val;
+struct ListObject : Object {
+	List<Object*> items;
 
 	static void constructor(Object* self);
 	static void copy(Object* self, const Object* in);
-	static IntObject* create(alni in);
+	static void destructor(Object* self);
 };
  
 
-extern ObjectType IntObjectType;
+extern ObjectType ListObjectType;

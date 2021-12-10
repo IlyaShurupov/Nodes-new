@@ -19,16 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\scr\main.cpp" />
+    <ClCompile Include="..\scr\classobject.cpp" />
+    <ClCompile Include="..\scr\dictobject.cpp" />
+    <ClCompile Include="..\scr\intobject.cpp" />
+    <ClCompile Include="..\scr\listobject.cpp" />
+    <ClCompile Include="..\scr\Nodes.cpp" />
+    <ClCompile Include="..\scr\NodesEntry.cpp" />
+    <ClCompile Include="..\scr\methodobject.cpp" />
+    <ClCompile Include="..\scr\nullobject.cpp" />
     <ClCompile Include="..\scr\object.cpp" />
+    <ClCompile Include="..\scr\PyInterp.cpp" />
+    <ClCompile Include="..\scr\PyNdo.cpp" />
+    <ClCompile Include="..\scr\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\classobject.h" />
-    <ClInclude Include="..\include\conststring.h" />
     <ClInclude Include="..\include\dictobject.h" />
     <ClInclude Include="..\include\intobject.h" />
+    <ClInclude Include="..\include\listobject.h" />
     <ClInclude Include="..\include\methodobject.h" />
+    <ClInclude Include="..\include\nullobject.h" />
     <ClInclude Include="..\include\object.h" />
+    <ClInclude Include="..\include\PyInterp.h" />
+    <ClInclude Include="..\include\PyNdo.h" />
+    <ClInclude Include="..\include\UI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -146,16 +160,15 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Debug;$(ProjectDir)..\..\glfw\lib\x64;$(ProjectDir)..\..\nanovg\lib\x64\Debug;$(ProjectDir)..\..\glew\lib\Debug\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nanovg.lib;types.lib;glfw3.lib;glew32sd.lib;opengl32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Debug;$(ProjectDir)..\..\glfw\lib\x64;$(ProjectDir)..\..\nanovg\lib\x64\Debug;$(ProjectDir)..\..\glew\lib\Debug\x64;$(ProjectDir)..\..\python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>python310.lib;nanovg.lib;types.lib;glfw3.lib;glew32sd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -171,17 +184,16 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Release;$(ProjectDir)..\..\glfw\lib\x64;$(ProjectDir)..\..\nanovg\lib\x64\Release;$(ProjectDir)..\..\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nanovg.lib;types.lib;glfw3.lib;glew32s.lib;opengl32.lib;nanovg.lib;glfw3.lib;glew32s.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Release;$(ProjectDir)..\..\glfw\lib\x64;$(ProjectDir)..\..\nanovg\lib\x64\Release;$(ProjectDir)..\..\glew\lib\Release\x64;$(ProjectDir)..\..\python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>python310.lib;nanovg.lib;types.lib;glfw3.lib;glew32s.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

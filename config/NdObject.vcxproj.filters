@@ -9,17 +9,44 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\scr\NodesEntry.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\Nodes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\UI.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\scr\object.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\scr\main.cpp">
+    <ClCompile Include="..\scr\intobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\dictobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\classobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\methodobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\nullobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\listobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\PyInterp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\PyNdo.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\conststring.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\intobject.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -33,6 +60,21 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\dictobject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UI.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nullobject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\listobject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PyNdo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PyInterp.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

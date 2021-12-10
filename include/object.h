@@ -3,10 +3,13 @@
 
 #include "Types.h"
 
-#include "conststring.h"
+#ifdef _DEBUG
+#define NDO_CAST(cast_type, ptr) ((cast_type*)ndo_cast(ptr, &cast_type##Type))
+#else
+#define NDO_CAST(cast_type, ptr) (cast_type*)ptr)
+#endif
 
-#define CCAST(type, ptr) ((type*)ptr)
-#define CCASTV(type, ptr, name) type* name = ((type*)ptr); name
+#define NDO_CASTV(cast_type, ptr, var_name) cast_type* var_name = NDO_CAST(cast_type, ptr); var_name
 
 /* Steps to create custom Object:
 define name of object
@@ -16,7 +19,9 @@ implement construct, destruct and copy methods */
 
 typedef void (*object_constructor)(struct Object* self);
 typedef void (*object_destructor)(Object* self);
-typedef void (*object_copy)(Object* self, Object* target);
+typedef void (*object_copy)(Object* self, const Object* target);
+
+extern struct object_types NDO;
 
 struct Object {
 	const struct ObjectType* type;
@@ -35,68 +40,14 @@ struct object_types {
 
 	hmap<const ObjectType*, constring> types;
 
-	void define(ObjectType* type, constring* base = NULL) {
-		types.Put(type->name, type);
-		if (base) {
-			type->base = types.Get(*base);
-		}
-	}
+	void define(ObjectType* type);
+	Object* create(constring name);
+	Object* copy(Object* self, const Object* in);
+	void destroy(Object* in);
 
-	Object* create(constring name) {
-		const ObjectType* type = types.Get(name);
-		Object* obj_instance = (Object*)malloc(type->size);
-
-		if (!obj_instance) {
-			return NULL;
-		}
-		
-		obj_instance->type = type;
-		
-		hierarchy_construct(obj_instance, obj_instance->type);
-
-		return obj_instance;
-	}
-
-	Object* copy(Object* self, Object* in) {
-		if (self->type != in->type) {
-			return NULL;
-		}
-
-		hierarchy_copy(self, in, self->type);
-
-		return self;
-	}
-
-	void destroy(Object* in) {
-		if (!in) {
-			return;
-		}
-
-		for (const ObjectType* iter = in->type; iter && iter->destructor; iter = iter->base) {
-			iter->destructor(in);
-		}
-	}
-
-	void hierarchy_copy(Object* self, Object* in, const ObjectType* type) {
-		if (type->base) {
-			hierarchy_copy(self, in, type->base);
-		}
-
-		if (type->copy) {
-			type->copy(self, in);
-		}
-	}
-
-	void hierarchy_construct(Object* self, const ObjectType* type) {
-		if (type->base) {
-			hierarchy_construct(self, type->base);
-		}
-
-		if (type->constructor) {
-			type->constructor(self);
-		}
-	}
+	void hierarchy_copy(Object* self, const Object* in, const ObjectType* type);
+	void hierarchy_construct(Object* self, const ObjectType* type);
 
 };
 
-extern object_types NDO;
+Object* ndo_cast(const Object* in, const ObjectType* to_type);
