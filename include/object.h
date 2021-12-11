@@ -26,7 +26,7 @@ struct Object {
 
 typedef void (*object_from_int)(Object* self, alni in);
 typedef void (*object_from_float)(Object* self, alnf in);
-typedef void (*object_from_string)(Object* self, constring in);
+typedef void (*object_from_string)(Object* self, string in);
 typedef string (*object_to_string)(Object* self);
 typedef alni (*object_to_int)(Object* self);
 typedef alnf (*object_to_float)(Object* self);
@@ -50,21 +50,21 @@ struct ObjectType {
 	object_destructor destructor = NULL;
 	object_copy copy = NULL;
 	alni size = NULL;
-	constring name;
+	string name;
 	const ObjectTypeConversions* convesions = NULL;
 };
 
 struct object_types {
 
-	hmap<const ObjectType*, constring> types;
+	hmap<const ObjectType*, string> types;
 
 	void define(ObjectType* type);
-	Object* create(constring name);
+	Object* create(string name);
 	Object* copy(Object* self, const Object* in);
 	
 	void set(Object* self, alni val);
 	void set(Object* self, alnf val);
-	void set(Object* self, constring val);
+	void set(Object* self, string val);
 
 	void destroy(Object* in);
 

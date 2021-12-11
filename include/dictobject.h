@@ -3,7 +3,7 @@
 #include "object.h"
 
 struct DictObject : Object {
-	hmap<Object*, constring> items;
+	hmap<Object*, string> items;
 
 	static void copy(Object* self, const Object* in);
 	static void destructor(Object* self);

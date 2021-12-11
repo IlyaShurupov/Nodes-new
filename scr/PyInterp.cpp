@@ -14,7 +14,7 @@ PyObject* ndo_create_object(PyObject* self, PyObject* args) {
 		return NULL;
 	}
 
-	constring name = arg;
+	string name = arg;
 
 	Object* out = NDO.create(name);
 	
@@ -64,7 +64,7 @@ sys.stderr = catchOut\n\
 	PyRun_SimpleString(stdOutErr);
 }
 
-void PyInterp::exec(constring cmd, Object* self, MethodObjectArgument* args) {
+void PyInterp::exec(string cmd, Object* self, MethodObjectArgument* args) {
 
 	PyDict_SetItemString(PyModule_GetDict(pModule), "ndo_self", PyEmbObject_New(self));
 
@@ -73,7 +73,7 @@ void PyInterp::exec(constring cmd, Object* self, MethodObjectArgument* args) {
 	PyObject* catcher = PyObject_GetAttrString(pModule, "catchOut");
 	PyObject* output = PyObject_GetAttrString(catcher, "value");
 
-	constring out = PyUnicode_AsUTF8(output);
+	string out = PyUnicode_AsUTF8(output);
 
 	NdLog_write(out.str); 
 

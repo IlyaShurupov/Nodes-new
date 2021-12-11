@@ -24,8 +24,10 @@ void IntObject::from_float(Object* self, alnf in) {
 	NDO_CAST(IntObject, self)->val = (alni)in;
 }
 
-void IntObject::from_string(Object* self, constring in) {
-	NDO_CAST(IntObject, self)->val = in.to_int();
+void IntObject::from_string(Object* self, string in) {
+	int out;
+	str_from_string(&in, out);
+	NDO_CAST(IntObject, self)->val = out;
 }
 
 string IntObject::to_string(Object* self) {

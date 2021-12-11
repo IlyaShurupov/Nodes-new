@@ -4,16 +4,24 @@
 #include "object.h"
 
 struct MethodObjectArgument {
-	constring name;
+	string name;
 	Object* arg;
 };
 
 typedef Object* (*ndo_static_method)(struct ClassObject* self, MethodObjectArgument* args);
 
+union MethoObjectCode {
+	string pycode;
+	ndo_static_method ccode = NULL;
+
+	~MethoObjectCode() {
+	}
+};
+
 struct MethodObject : Object {
 
 	struct ClassObject* self;
-	void* code;
+	MethoObjectCode code;
 	alni code_flags;
 
 	static void constructor(Object* in);
@@ -21,7 +29,7 @@ struct MethodObject : Object {
 
 	Object* operator()(MethodObjectArgument* args);
 
-	static void from_string(Object* self, constring in);
+	static void from_string(Object* self, string in);
 };
 
 extern ObjectType MethodObjectType;

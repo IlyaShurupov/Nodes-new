@@ -8,7 +8,7 @@ void object_types::define(ObjectType* type) {
 	types.Put(type->name, type);
 }
 
-Object* object_types::create(constring name) {
+Object* object_types::create(string name) {
 	const ObjectType* type = types.Get(name);
 	Object* obj_instance = (Object*)malloc(type->size);
 
@@ -88,7 +88,7 @@ void object_types::set(Object* self, alnf val) {
 	}
 }
 
-void object_types::set(Object* self, constring val) {
+void object_types::set(Object* self, string val) {
 	if (self->type->convesions && self->type->convesions->from_string) {
 		self->type->convesions->from_string(self, val);
 		return;

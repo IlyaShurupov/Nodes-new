@@ -77,7 +77,7 @@ Object* NodesCoreClass::run(ClassObject* in, MethodObjectArgument* args) {
 
 		NDO_CASTV(MethodObject, self->member("console_foo"), foo_method);
 		foo_method->code_flags = 1;
-		foo_method->code = (void*)cmd_out.str;
+		foo_method->code.pycode = cmd_out.str;
 		self->call("console_foo", NULL);
 
 		const string* out = NdLog_read();
