@@ -11,8 +11,8 @@ struct UIClass : ClassObject {
 	static void destructor(Object* in);
 	static void constructor(Object* in);
 
-	static Object* proc_inputs(ClassObject*, MethodObjectArgument*);
-	static Object* present_ouput(ClassObject*, MethodObjectArgument*);
+	static Object* proc_inputs(Object*, Object*);
+	static Object* present_ouput(Object*, Object*);
 };
 
 
@@ -26,8 +26,8 @@ struct GUIClass : UIClass {
 	static void destructor(Object* in);
 	static void constructor(Object* in);
 
-	static Object* proc_inputs(ClassObject*, MethodObjectArgument*);
-	static Object* present_ouput(ClassObject*, MethodObjectArgument*);
+	static Object* proc_inputs(Object*, Object*);
+	static Object* present_ouput(Object*, Object*);
 };
 
 extern ObjectType TUIClassType;
@@ -40,6 +40,6 @@ struct TUIClass : UIClass {
 	static void destructor(Object* in);
 	static void constructor(Object* in);
 
-	static Object* proc_inputs(ClassObject*, MethodObjectArgument*);
-	static Object* present_ouput(ClassObject*, MethodObjectArgument*);
+	static Object* proc_inputs(Object*, Object*);
+	static Object* present_ouput(Object*, Object*);
 };

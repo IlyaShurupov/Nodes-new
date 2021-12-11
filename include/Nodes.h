@@ -6,7 +6,7 @@ struct NodesCoreClass : ClassObject {
 
 	static void destructor(Object* in);
 	static void constructor(Object* in);
-	static Object* run(ClassObject* self, MethodObjectArgument* args);
+	static Object* run(Object* self, Object* args);
 };
 
 extern ObjectType NodesCoreClassType;

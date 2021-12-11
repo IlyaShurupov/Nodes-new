@@ -2,7 +2,7 @@
 
 #include "UI.h"
 
-ClassStaticMethod UIMethods[] = {
+ObjectStaticMethod UIMethods[] = {
 	{"proc_inputs", UIClass::proc_inputs},
 	{"present_outut", UIClass::present_ouput},
 	{NULL, NULL}
@@ -20,11 +20,11 @@ struct ObjectType UIClassType = {
 void UIClass::copy(Object* self, const Object* in) {}
 void UIClass::destructor(Object* in) {}
 void UIClass::constructor(Object* in) {}
-Object* UIClass::proc_inputs(ClassObject* self, MethodObjectArgument* args) { return NDO_NULL; };
-Object* UIClass::present_ouput(ClassObject* self, MethodObjectArgument* args) { return NDO_NULL; };
+Object* UIClass::proc_inputs(Object* self, Object* args) { return NDO_NULL; };
+Object* UIClass::present_ouput(Object* self, Object* args) { return NDO_NULL; };
 
 
-ClassStaticMethod GUIMethods[] = {
+ObjectStaticMethod GUIMethods[] = {
 	{"proc_inputs", GUIClass::proc_inputs},
 	{"present_output", GUIClass::present_ouput},
 	{NULL, NULL}
@@ -54,11 +54,11 @@ void GUIClass::destructor(Object* in) {
 	NDO_CAST(GUIClass, in)->window.~Window();
 }
 
-Object* GUIClass::proc_inputs(ClassObject* self, MethodObjectArgument* args) {
+Object* GUIClass::proc_inputs(Object* self, Object* args) {
 	return NDO_NULL;
 };
 
-Object* GUIClass::present_ouput(ClassObject* in, MethodObjectArgument* args) {
+Object* GUIClass::present_ouput(Object* in, Object* args) {
 
 	NDO_CASTV(GUIClass, in, self);
 
@@ -82,7 +82,7 @@ Object* GUIClass::present_ouput(ClassObject* in, MethodObjectArgument* args) {
 };
 
 
-ClassStaticMethod TUIMethods[] = {
+ObjectStaticMethod TUIMethods[] = {
 	{"proc_inputs", TUIClass::proc_inputs},
 	{"present_output", TUIClass::present_ouput},
 	{NULL, NULL}
@@ -112,7 +112,7 @@ void TUIClass::destructor(Object* in) {
 	NDO_CAST(TUIClass, in)->keyboard.~Keyboard();
 }
 
-Object* TUIClass::proc_inputs(ClassObject* in, MethodObjectArgument* args) {
+Object* TUIClass::proc_inputs(Object* in, Object* args) {
 	NDO_CASTV(TUIClass, in, self);
 
 	self->keyboard.PumpEvents();
@@ -122,7 +122,7 @@ Object* TUIClass::proc_inputs(ClassObject* in, MethodObjectArgument* args) {
 	return NDO_NULL;
 };
 
-Object* TUIClass::present_ouput(ClassObject* in, MethodObjectArgument* args) {
+Object* TUIClass::present_ouput(Object* in, Object* args) {
 	//NDO_CASTV(TUIClass, in, self);
 	return NDO_NULL;
 };

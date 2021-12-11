@@ -70,10 +70,14 @@ static PyObject* EmbObj_call(PyObject* self, PyObject* args) {
 
 	string name = arg;
 
-	NDO_CASTV(ClassObject, me->ndo_ptr, ndo_class);
-
-	Object* ndo_out = ndo_class->call(name, NULL);
-
+	Object* ndo_out;
+	if (ndo_cast(me->ndo_ptr, &ClassObjectType)) {
+		NDO_CASTV(ClassObject, me->ndo_ptr, ndo_class);
+		ndo_out = ndo_class->call(name, NULL);
+	}
+	else {
+		ndo_out = NDO.call_type_method(name, me->ndo_ptr, NULL);
+	}
 	return PyEmbObject_New(ndo_out);
 }
 
@@ -114,11 +118,28 @@ static PyObject* EmbObj_get(PyObject* self, PyObject* Py_UNUSED(args)) {
 	Py_EmbObj* pyndo = (Py_EmbObj*)self;
 
 	if (pyndo->ndo_ptr->type == &IntObjectType) {
-		return PyLong_FromLong(NDO_CAST(IntObject, pyndo->ndo_ptr)->val);
+		return PyLong_FromLong((long)NDO_CAST(IntObject, pyndo->ndo_ptr)->val);
 	}
 	else {
 		return NULL;
 	}
+}
+
+static PyObject* EmbObj_destroy(PyObject* self, PyObject* Py_UNUSED(args)) {
+	Py_EmbObj* pyndo = (Py_EmbObj*)self;
+	NDO.destroy(pyndo->ndo_ptr);
+	return PyBool_FromLong(0);
+}
+
+static PyObject* EmbObj_save(PyObject* self, PyObject* Py_UNUSED(args)) {
+	Py_EmbObj* pyndo = (Py_EmbObj*)self;
+	NDO.save(pyndo->ndo_ptr);
+	return PyBool_FromLong(0);
+}
+
+static PyObject* EmbObj_load(PyObject* self, PyObject* Py_UNUSED(args)) {
+	Py_EmbObj* pyndo = (Py_EmbObj*)self;
+	return PyEmbObject_New(NDO.load());
 }
 
 static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
@@ -160,6 +181,9 @@ static PyMethodDef Emb_methods[] = {
 	{"set", EmbObj_set, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"get", EmbObj_get, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"call", EmbObj_call, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"save", EmbObj_save, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"load", EmbObj_load, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"destroy", EmbObj_destroy, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{NULL, NULL},
 };
 

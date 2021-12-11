@@ -64,7 +64,7 @@ sys.stderr = catchOut\n\
 	PyRun_SimpleString(stdOutErr);
 }
 
-void PyInterp::exec(string cmd, Object* self, MethodObjectArgument* args) {
+void PyInterp::exec(string cmd, Object* self, Object* args) {
 
 	PyDict_SetItemString(PyModule_GetDict(pModule), "ndo_self", PyEmbObject_New(self));
 

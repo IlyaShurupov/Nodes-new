@@ -6,11 +6,6 @@
 #include "dictobject.h"
 #include "methodobject.h"
 
-struct ClassStaticMethod {
-	string name;
-	ndo_static_method function_adress;
-};
-
 struct ClassObject : Object {
 
 	DictObject*  members;
@@ -19,7 +14,7 @@ struct ClassObject : Object {
 	static void destructor(Object* in);
 	static void constructor(Object* in);
 
-	void add_methods(const ClassStaticMethod* methods) {
+	void add_methods(const ObjectStaticMethod* methods) {
 
 		for (; *((alni*)methods); methods++) {
 			NDO_CASTV(MethodObject, NDO.create("method"), class_method);
@@ -30,7 +25,7 @@ struct ClassObject : Object {
 		}
 	}
 
-	Object* call(string name, MethodObjectArgument* args) {
+	Object* call(string name, Object* args) {
 
 		NDO_CASTV(MethodObject, members->items.Get(name), method);
 		

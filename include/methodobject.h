@@ -3,13 +3,6 @@
 
 #include "object.h"
 
-struct MethodObjectArgument {
-	string name;
-	Object* arg;
-};
-
-typedef Object* (*ndo_static_method)(struct ClassObject* self, MethodObjectArgument* args);
-
 union MethoObjectCode {
 	string pycode;
 	ndo_static_method ccode = NULL;
@@ -27,7 +20,7 @@ struct MethodObject : Object {
 	static void constructor(Object* in);
 	static void copy(Object* self, const Object* in);
 
-	Object* operator()(MethodObjectArgument* args);
+	Object* operator()(Object* args);
 
 	static void from_string(Object* self, string in);
 };

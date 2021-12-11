@@ -7,7 +7,7 @@
 #include "methodobject.h"
 #include "listobject.h"
 
-struct ClassStaticMethod NodesCoreMethods[] = {
+struct ObjectStaticMethod NodesCoreMethods[] = {
 	{"run", NodesCoreClass::run },
 	{"console_foo", NULL },
 	{NULL, NULL}
@@ -44,7 +44,7 @@ void NodesCoreClass::constructor(Object* in) {
 #include <iostream>
 #include <string.h>
 
-Object* NodesCoreClass::run(ClassObject* in, MethodObjectArgument* args) {
+Object* NodesCoreClass::run(Object* in, Object* args) {
 
 	NDO_CASTV(NodesCoreClass, in, self);
 

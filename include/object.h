@@ -24,6 +24,16 @@ struct Object {
 	const struct ObjectType* type;
 };
 
+struct ndo_static_method {
+	Object* (*method)(struct Object* self, Object* args);
+};
+
+
+struct ObjectStaticMethod {
+	string name;
+	ndo_static_method function_adress;
+};
+
 typedef void (*object_from_int)(Object* self, alni in);
 typedef void (*object_from_float)(Object* self, alnf in);
 typedef void (*object_from_string)(Object* self, string in);
@@ -43,6 +53,8 @@ struct ObjectTypeConversions {
 typedef void (*object_constructor)(Object* self);
 typedef void (*object_destructor)(Object* self);
 typedef void (*object_copy)(Object* self, const Object* target);
+typedef void (*object_save)(Object*, File&);
+typedef Object* (*object_load)(File&);
 
 struct ObjectType {
 	const ObjectType* base;
@@ -52,6 +64,41 @@ struct ObjectType {
 	alni size = NULL;
 	string name;
 	const ObjectTypeConversions* convesions = NULL;
+	object_save save = NULL;
+	object_load load = NULL;
+	ObjectStaticMethod* type_methods = NULL;
+	hmap<ndo_static_method*, string> type_methods_dict;
+};
+
+union StackSlot {
+	alni arg_count;
+	Object* arg;
+	Object* ret;
+};
+
+struct ObjectCallStack {
+	StackSlot stack[100];
+
+	alni method_base = 0;
+	alni arg_count = 0;
+
+	void push(Object* arg) {
+		stack[arg_count + 1].arg = arg;
+		stack[method_base].arg_count++;
+	}
+
+	Object* get_arg(char idx) {
+		return stack[method_base + 1 + idx].arg;
+	}
+
+	void call() {
+		arg_count = 0;
+		method_base += stack[method_base].arg_count + 1;
+	}
+
+	void ret() {
+		method_base -= stack[method_base].arg_count + 1;
+	}
 };
 
 struct object_types {
@@ -66,10 +113,12 @@ struct object_types {
 	void set(Object* self, alnf val);
 	void set(Object* self, string val);
 
-	void destroy(Object* in);
+	alni save(Object*);
+	Object* load(); 
 
-	void hierarchy_copy(Object* self, const Object* in, const ObjectType* type);
-	void hierarchy_construct(Object* self, const ObjectType* type);
+	Object* call_type_method(string name, Object*, Object*);
+
+	void destroy(Object* in);
 
 };
 

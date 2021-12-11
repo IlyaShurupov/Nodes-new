@@ -33,9 +33,9 @@ void MethodObject::copy(Object* o_self, const Object* o_in) {
 	self->code_flags = in->code_flags;
 }
 
-Object* MethodObject::operator()(MethodObjectArgument* args) {
+Object* MethodObject::operator()(Object* args) {
 	if (!code_flags) {
-		code.ccode(self, args);
+		code.ccode.method((Object*)self, args);
 	}
 	else if (code_flags == 1) {
 		GlobalMethod_PyInterp.exec(code.pycode, (Object*)self, args);
