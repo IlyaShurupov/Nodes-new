@@ -7,7 +7,7 @@
 #include "methodobject.h"
 
 struct ClassStaticMethod {
-	constring name;
+	string name;
 	ndo_static_method function_adress;
 };
 
@@ -24,13 +24,13 @@ struct ClassObject : Object {
 		for (; *((alni*)methods); methods++) {
 			NDO_CASTV(MethodObject, NDO.create("method"), class_method);
 			class_method->self = this;
-			class_method->code = (void*)methods->function_adress;
+			class_method->code.ccode = methods->function_adress;
 
 			members->items.Put(methods->name, class_method);
 		}
 	}
 
-	Object* call(constring name, MethodObjectArgument* args) {
+	Object* call(string name, MethodObjectArgument* args) {
 
 		NDO_CASTV(MethodObject, members->items.Get(name), method);
 		
@@ -41,7 +41,7 @@ struct ClassObject : Object {
 		return (*method)(args);
 	}
 
-	Object* member(constring name) {
+	Object* member(string name) {
 		return members->items.Get(name);
 	}
 };

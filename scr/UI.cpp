@@ -68,9 +68,9 @@ Object* GUIClass::present_ouput(ClassObject* in, MethodObjectArgument* args) {
 
 	if (1) {
 		int bord_size = 2;
-		Color col(0.3, 0.3, 0.3, 1);
-		Color col2(0.08, 0.08, 0.08, 1);
-		Rect<float> inner(vec2<float>(bord_size, bord_size), self->window.window_dim.size - bord_size * 2);
+		Color col(0.3f, 0.3f, 0.3f, 1.f);
+		Color col2(0.08f, 0.08f, 0.08f, 1.f);
+		Rect<float> inner(vec2<float>(bord_size, bord_size), self->window.window_dim.size - bord_size * 2.f);
 		
 		self->window.RRect(Rect<float>(vec2<float>(), self->window.window_dim.size), col, 11.f);
 		self->window.RRect(inner, col2, 9.f);

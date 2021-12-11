@@ -44,11 +44,11 @@ static PyObject* EmbObj_get_child(PyObject* self, PyObject* args) {
 		return NULL;
 	}
 
-	constring name = arg;
+	string name = arg;
 
 	NDO_CASTV(ClassObject, me->ndo_ptr, ndo_class);
 
-	int child_idx = ndo_class->members->items.Presents(name);
+	alni child_idx = ndo_class->members->items.Presents(name);
 
 	if (child_idx == -1) {
 		return NULL;
@@ -67,7 +67,7 @@ static PyObject* EmbObj_call(PyObject* self, PyObject* args) {
 		return NULL;
 	}
 
-	constring name = arg;
+	string name = arg;
 
 	NDO_CASTV(ClassObject, me->ndo_ptr, ndo_class);
 
@@ -92,7 +92,7 @@ static PyObject* EmbObj_set(PyObject* self, PyObject* args) {
 		NDO.set(ndo, (alni)val);
 	}
 	else if (arg_type == "float") {
-		float val = PyFloat_AsDouble(arg);
+		float val = (float)PyFloat_AsDouble(arg);
 		NDO.set(ndo, val);
 	}
 	else if (arg_type == "str") {
@@ -113,21 +113,21 @@ static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 	PyObject* arg_name;
 	PyObject* arg_ndo;
 	
-	constring name;
+	string name;
 	Object* ndo_child;
 
 	if (!PyArg_ParseTuple(args, "OO", &arg_name, &arg_ndo)) {
 		return NULL;
 	}
-	if (constring("str") != arg_name->ob_type->tp_name) {
+	if (string("str") != arg_name->ob_type->tp_name) {
 		return NULL;
 	}
-	if (constring("EmbObj") != arg_ndo->ob_type->tp_name) {
+	if (string("EmbObj") != arg_ndo->ob_type->tp_name) {
 		return NULL;
 	}
 
 	
-	name.str = PyUnicode_AsUTF8(arg_name);
+	name = PyUnicode_AsUTF8(arg_name);
 	ndo_child = ((Py_EmbObj*)arg_ndo)->ndo_ptr;
 
 	Object* ndo = ((Py_EmbObj*)self)->ndo_ptr;
@@ -136,13 +136,7 @@ static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 		return NULL;
 	}
 
-	// FIXME!!!!
-	string bad;
-	bad = name.str;
-
-	((ClassObject*)ndo)->members->items.Put(bad.str, ndo_child);
-
-	bad.str = 0;
+	((ClassObject*)ndo)->members->items.Put(name, ndo_child);
 
 	return PyLong_FromLong(0);
 }

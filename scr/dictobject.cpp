@@ -20,7 +20,7 @@ void DictObject::destructor(Object* self) {
 void DictObject::constructor(Object* self) {
 	NDO_CASTV(DictObject, self, dict);
 
-	new (&dict->items) hmap<Object*, constring>();
+	new (&dict->items) hmap<Object*, string>();
 
 	dict->items.del_values = false;
 }
