@@ -5,6 +5,7 @@
 
 #include "object.h"
 #include "classobject.h"
+#include "intobject.h"
 
 typedef struct {
 	PyObject_HEAD;
@@ -108,6 +109,18 @@ static PyObject* EmbObj_set(PyObject* self, PyObject* args) {
 	return PyLong_FromLong(0);
 }
 
+static PyObject* EmbObj_get(PyObject* self, PyObject* Py_UNUSED(args)) {
+
+	Py_EmbObj* pyndo = (Py_EmbObj*)self;
+
+	if (pyndo->ndo_ptr->type == &IntObjectType) {
+		return PyLong_FromLong(NDO_CAST(IntObject, pyndo->ndo_ptr)->val);
+	}
+	else {
+		return NULL;
+	}
+}
+
 static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 	
 	PyObject* arg_name;
@@ -145,6 +158,7 @@ static PyMethodDef Emb_methods[] = {
 	{"add_child", EmbObj_add_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"child", EmbObj_get_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"set", EmbObj_set, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"get", EmbObj_get, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"call", EmbObj_call, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{NULL, NULL},
 };

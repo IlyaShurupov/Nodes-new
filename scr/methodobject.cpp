@@ -48,7 +48,7 @@ void MethodObject::from_string(Object* in, string code) {
 	NDO_CASTV(MethodObject, in, self);
 	self->code_flags = 1;
 
-	self->code.pycode = code;
+	new (&self->code.pycode) string(code);
 }
 
 struct ObjectTypeConversions MethodTypeConversions = {
