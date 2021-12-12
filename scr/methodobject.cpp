@@ -45,6 +45,41 @@ void MethodObject::from_string(Object* in, string code) {
 	self->assign(code);
 }
 
+static void save(MethodObject* self, File& file_self) {
+
+	file_self.avl_adress++;
+	file_self.write<alni>(&self->code_flags);
+
+	if (self->code_flags == 1) {
+		alni pycode_len = self->code.pycode.len();
+
+		file_self.avl_adress += pycode_len + 1;
+
+		file_self.write<alni>(&pycode_len);
+		file_self.write_bytes(self->code.pycode.str, pycode_len);
+	} 
+
+}
+
+static Object* load(File& file_self) {
+	MethodObject* self = (MethodObject*)NDO.create("method");
+
+	file_self.read<alni>(&self->code_flags);
+	if (self->code_flags == 1) {
+		alni len;
+		file_self.read<alni>(&len);
+
+		// read key value
+		string pycode;
+		pycode.alloc(len);
+		file_self.read_bytes(pycode.str, len);
+
+		new (&self->code.pycode) string(pycode);
+	}
+
+	return self;
+}
+
 struct ObjectTypeConversions MethodTypeConversions = {
 	NULL,
 	NULL,
@@ -62,4 +97,6 @@ struct ObjectType MethodObjectType = {
 	.size = sizeof(MethodObject),
 	.name = "method",
 	.convesions = &MethodTypeConversions,
+	.save = (object_save)save,
+	.load = (object_load)load,
 };
