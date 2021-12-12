@@ -77,8 +77,11 @@ struct object_types {
 	void set(Object* self, alnf val);
 	void set(Object* self, string val);
 
-	alni save(Object*);
-	Object* load(); 
+	alni save(File&, Object*);
+	Object* load(File&, alni file_adress);
+
+	void save(Object*);
+	Object* load();
 
 	void push(Object*);
 	Object* call(Object* self, ndo_static_method meth);

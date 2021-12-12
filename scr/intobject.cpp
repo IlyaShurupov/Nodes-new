@@ -42,11 +42,12 @@ alnf IntObject::to_float(Object* self) {
 	return alnf(NDO_CAST(IntObject, self)->val);
 }
 
-void save(IntObject* self, File& file_self) {
+static void save(IntObject* self, File& file_self) {
+	file_self.avl_adress += sizeof(alni);
 	file_self.write<alni>(&self->val);
 }
 
-Object* load(File& file_self) {
+static Object* load(File& file_self) {
 	IntObject* self = (IntObject*)NDO.create("int");
 	file_self.read<alni>(&self->val);
 	return self;

@@ -98,8 +98,6 @@ void object_types::set(Object* self, string val) {
 struct ObjectFileHead {
 
 	ObjectFileHead(const ObjectType* in) {
-		type_size = in->size;
-
 		alni i = 0;
 		for (; in->name.str[i] != '\0'; i++) {
 			type_name[i] = in->name.str[i];
@@ -108,41 +106,69 @@ struct ObjectFileHead {
 	}
 
 	ObjectFileHead() {
+		type_name[15] = 0;
 	}
 
-	alni type_size;
-	char type_name[32];
+	char type_name[16];
 };
 
-alni object_types::save(Object* in) {
+alni object_types::save(File& ndf, Object* in) {
 
-	for (ObjectMemHead* memh_iter = bottom; memh_iter; memh_iter = memh_iter->up) {
-		memh_iter->flags = 0;
-	}
-	
-	ObjectMemHead* memh = ((ObjectMemHead*)in) - 1;
+	// save write adress for parent save function call 
+	alni tmp_adress = ndf.adress;
 
-	File ndf("save.nd");
+	// save requested object to first avaliable adress
+	alni save_adress = ndf.avl_adress;
+
+	// update write adress
+	ndf.adress = save_adress;
+
+	// save file object header
 	ObjectFileHead ofh(in->type);
 	ndf.write<ObjectFileHead>(&ofh);
 
+	// allocate for object file header
+	ndf.avl_adress += sizeof(ObjectFileHead);
+
 	in->type->save(in, ndf);
 
-	return 0;
+	// restore adress for parent save function
+	ndf.adress = tmp_adress;
+
+	// return addres of saved object in file space
+	return save_adress;
 }
 
-Object* object_types::load() {
-	File ndf("save.nd");
+Object* object_types::load(File& ndf, alni file_adress) {
+
+	alni parent_file_adress = ndf.adress;
+	ndf.adress = file_adress;
 
 	ObjectFileHead ofh;
-
 	ndf.read<ObjectFileHead>(&ofh);
 
 	const ObjectType* load_type = NDO.types.Get(ofh.type_name);
-
 	Object* out = load_type->load(ndf);
 
+	ndf.adress = parent_file_adress;
+
 	return out;
+}
+
+void object_types::save(Object* in) {
+	for (ObjectMemHead* memh_iter = bottom; memh_iter; memh_iter = memh_iter->up) {
+		memh_iter->flags = 0;
+	}
+
+	File ndf("save.nd", FileOpenFlags::SAVE);
+
+	save(ndf, in);
+}
+
+Object* object_types::load() {
+	File ndf("save.nd", FileOpenFlags::LOAD);
+
+	return load(ndf, 0);
 }
 
 void object_types::push(Object* in) {

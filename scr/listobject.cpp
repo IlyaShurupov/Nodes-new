@@ -57,6 +57,35 @@ Object* ListObject::get(ListObject * self, Object * arg) {
 	return self->items[idx];
 }
 
+static void save(ListObject* self, File& file_self) {
+
+	alni len = self->items.Len();
+	file_self.write<alni>(&len);
+
+	// allocate mem by moving down avk adress
+	file_self.avl_adress += (len + 1) * sizeof(alni);
+
+	for (auto item : self->items) {
+		alni ndo_object_adress = NDO.save(file_self, item.Data());
+		file_self.write<alni>(&ndo_object_adress);
+	}
+}
+
+static Object* load(File& file_self) {
+	ListObject* self = (ListObject*)NDO.create("list");
+
+	alni len; 
+	file_self.read<alni>(&len);
+	
+	for (alni i = 0; i < len; i++) {
+		alni ndo_object_adress;
+		file_self.read<alni>(&ndo_object_adress);
+		self->items.PushBack(NDO.load(file_self, ndo_object_adress));
+	}
+
+	return self;
+}
+
 ObjectStaticMethod ListTypeMethods[] = {
 	{(ndo_method)ListObject::get, "get"},
 	{(ndo_method)ListObject::remove, "remove"},
@@ -73,5 +102,7 @@ struct ObjectType ListObjectType = {
 	.size = sizeof(ListObject),
 	.name = "list",
 	.convesions = NULL,
+	.save = (object_save)save,
+	.load = (object_load)load,
 	.type_methods = ListTypeMethods,
 };

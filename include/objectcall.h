@@ -33,7 +33,7 @@ struct ObjectCallStack {
 		frame_argc++;
 	}
 
-	Object* get_arg(char idx) {
+	Object* get_arg(alni idx) {
 		return cs[frameb - cs[frameb - 1].arg_count - 1 + idx].arg;
 	}
 
