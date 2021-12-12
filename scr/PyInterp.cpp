@@ -3,7 +3,6 @@
 
 #include "PyNdo.h"
 
-#include "object.h"
 
 PyObject* pModule;
 
@@ -62,11 +61,26 @@ sys.stderr = catchOut\n\
 	pModule = PyImport_AddModule("__main__");
 
 	PyRun_SimpleString(stdOutErr);
+
+	PyObject* self_arg = PyEmbObject_New(0);
+	PyObject* module_dict = PyModule_GetDict(pModule);
+
+	PyDict_SetItemString(module_dict, "ndo_self", self_arg);
 }
 
-void PyInterp::exec(string cmd, Object* self, Object* args) {
+Object* PyInterp::exec(string cmd, Object* self) {
 
-	PyDict_SetItemString(PyModule_GetDict(pModule), "ndo_self", PyEmbObject_New(self));
+	PyObject* module_dict = PyModule_GetDict(pModule);
+
+	Py_EmbObj* py_self = (Py_EmbObj*)PyDict_GetItemString(module_dict, "ndo_self");
+	py_self->ndo_ptr = self;
+
+	PyObject* arg_list = PyList_New(0);
+	PyDict_SetItemString(module_dict, "ndo_args", arg_list);
+	
+	for (alni i = 0; NDO.callstak.get_arg(i); i++) {
+		PyList_Append(arg_list, PyEmbObject_New(NDO.callstak.get_arg(i)));
+	}
 
 	PyRun_SimpleString(cmd.str);
 
@@ -79,6 +93,8 @@ void PyInterp::exec(string cmd, Object* self, Object* args) {
 
 	PyObject* function = PyObject_GetAttrString(catcher, "clear");
 	PyObject_CallObject(function, NULL);
+
+	return NULL;
 }
 
 PyInterp::~PyInterp() {

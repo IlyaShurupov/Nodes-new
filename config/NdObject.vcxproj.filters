@@ -77,5 +77,8 @@
     <ClInclude Include="..\include\PyInterp.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\objectcall.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

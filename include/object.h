@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include "objectcall.h"
+
 #ifdef _DEBUG
 #define NDO_CAST(cast_type, ptr) ((cast_type*)ndo_cast(ptr, &cast_type##Type))
 #else
@@ -22,16 +24,8 @@ extern struct object_types NDO;
 
 struct Object {
 	const struct ObjectType* type;
-};
 
-struct ndo_static_method {
-	Object* (*method)(struct Object* self, Object* args);
-};
-
-
-struct ObjectStaticMethod {
-	string name;
-	ndo_static_method function_adress;
+	Object* call_type_method(string name);
 };
 
 typedef void (*object_from_int)(Object* self, alni in);
@@ -70,39 +64,9 @@ struct ObjectType {
 	hmap<ndo_static_method*, string> type_methods_dict;
 };
 
-union StackSlot {
-	alni arg_count;
-	Object* arg;
-	Object* ret;
-};
-
-struct ObjectCallStack {
-	StackSlot stack[100];
-
-	alni method_base = 0;
-	alni arg_count = 0;
-
-	void push(Object* arg) {
-		stack[arg_count + 1].arg = arg;
-		stack[method_base].arg_count++;
-	}
-
-	Object* get_arg(char idx) {
-		return stack[method_base + 1 + idx].arg;
-	}
-
-	void call() {
-		arg_count = 0;
-		method_base += stack[method_base].arg_count + 1;
-	}
-
-	void ret() {
-		method_base -= stack[method_base].arg_count + 1;
-	}
-};
-
 struct object_types {
 
+	ObjectCallStack callstak;
 	hmap<const ObjectType*, string> types;
 
 	void define(ObjectType* type);
@@ -116,7 +80,8 @@ struct object_types {
 	alni save(Object*);
 	Object* load(); 
 
-	Object* call_type_method(string name, Object*, Object*);
+	void push(Object*);
+	Object* call(Object* self, ndo_static_method meth);
 
 	void destroy(Object* in);
 

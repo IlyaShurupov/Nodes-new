@@ -5,6 +5,6 @@
 
 struct PyInterp {
 	PyInterp();
-	void exec(string cmd, struct Object* self, struct Object* args);
+	struct Object* exec(string cmd, Object* self);
 	~PyInterp();
 };

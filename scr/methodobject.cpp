@@ -19,36 +19,30 @@ void MethodObject::copy(Object* o_self, const Object* o_in) {
 	NDO_CASTV(MethodObject, o_self, self);
 	NDO_CASTV(MethodObject, o_in, in);
 
-	if (self->code_flags == 1) {
-		self->code.pycode.clear();
-	}
-	
 	if (in->code_flags == 1) {
-		self->code.pycode = in->code.pycode;
+		self->assign(in->code.pycode);
 	}
 	else {
-		self->code.ccode = in->code.ccode;
+		self->assign(in->code.ccode);
 	}
 	
-	self->code_flags = in->code_flags;
+	self->self = in->self;
 }
 
-Object* MethodObject::operator()(Object* args) {
+Object* MethodObject::operator()() {
 	if (!code_flags) {
-		code.ccode.method((Object*)self, args);
+		return NDO.call((Object*)self, code.ccode);
 	}
 	else if (code_flags == 1) {
-		GlobalMethod_PyInterp.exec(code.pycode, (Object*)self, args);
+		NDO.callstak.call();
+		return GlobalMethod_PyInterp.exec(code.pycode, (Object*)self);
+		NDO.callstak.ret();
 	}
-
-	return NULL;
 }
 
 void MethodObject::from_string(Object* in, string code) {
 	NDO_CASTV(MethodObject, in, self);
-	self->code_flags = 1;
-
-	new (&self->code.pycode) string(code);
+	self->assign(code);
 }
 
 struct ObjectTypeConversions MethodTypeConversions = {

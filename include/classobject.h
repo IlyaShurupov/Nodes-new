@@ -25,7 +25,7 @@ struct ClassObject : Object {
 		}
 	}
 
-	Object* call(string name, Object* args) {
+	Object* call(string name) {
 
 		NDO_CASTV(MethodObject, members->items.Get(name), method);
 		
@@ -33,7 +33,7 @@ struct ClassObject : Object {
 			return NULL;
 		}
 
-		return (*method)(args);
+		return (*method)();
 	}
 
 	Object* member(string name) {

@@ -22,6 +22,5 @@ int main() {
 	NDO.define(&GUIClassType);
 	NDO.define(&TUIClassType);
 
-
-	NDO_CAST(ClassObject, NDO.create("NodesCore"))->call("run", NULL);
+	NDO_CAST(ClassObject, NDO.create("NodesCore"))->call("run");
 }

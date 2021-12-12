@@ -11,4 +11,12 @@
 #include "Python.h"
 #endif
 
+#include "object.h"
+
+typedef struct {
+	PyObject_HEAD;
+	Object* ndo_ptr;
+} Py_EmbObj;
+
+
 PyObject* PyEmbObject_New(struct Object* self);

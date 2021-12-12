@@ -8,8 +8,8 @@
 #include "listobject.h"
 
 struct ObjectStaticMethod NodesCoreMethods[] = {
-	{"run", NodesCoreClass::run },
-	{"console_foo", NULL },
+	{NodesCoreClass::run, "run"},
+	{NodesCoreClass::run, "console_foo"},
 	{NULL, NULL}
 };
 
@@ -61,7 +61,7 @@ Object* NodesCoreClass::run(Object* in, Object* args) {
 
 		// Pump Requests From UIs
 		for (auto ui : uis->items) {
-			NDO_CAST(ClassObject, ui.Data())->call("proc_inputs", NULL);
+			NDO_CAST(ClassObject, ui.Data())->call("proc_inputs");
 		}
 
 		std::string cmd;
@@ -76,9 +76,8 @@ Object* NodesCoreClass::run(Object* in, Object* args) {
 		cmd_out = cmd.c_str();
 
 		NDO_CASTV(MethodObject, self->member("console_foo"), foo_method);
-		foo_method->code_flags = 1;
-		foo_method->code.pycode = cmd_out.str;
-		self->call("console_foo", NULL);
+		foo_method->assign(cmd_out.str);
+		self->call("console_foo");
 
 		const string* out = NdLog_read();
 		if (out) {
@@ -87,7 +86,7 @@ Object* NodesCoreClass::run(Object* in, Object* args) {
 
 		// Output to the user
 		for (auto ui : uis->items) {
-			NDO_CAST(ClassObject, ui.Data())->call("present_output", NULL);
+			NDO_CAST(ClassObject, ui.Data())->call("present_output");
 		}
 
 		timer.wait_out();

@@ -7,10 +7,6 @@
 #include "classobject.h"
 #include "intobject.h"
 
-typedef struct {
-	PyObject_HEAD;
-	Object* ndo_ptr;
-} Py_EmbObj;
 
 static PyObject* Emb_new(PyTypeObject* type, PyObject* args, PyObject* kwargs) {
 
@@ -59,25 +55,64 @@ static PyObject* EmbObj_get_child(PyObject* self, PyObject* args) {
 	return out;
 }
 
-static PyObject* EmbObj_call(PyObject* self, PyObject* args) {
+Py_EmbObj* NodesPyObject_fromPyObject(PyObject* in) {
+	Object* out = nullptr;
 
-	Py_EmbObj* me = ((Py_EmbObj*)self);
+	if (string("int") == in->ob_type->tp_name) {
+		IntObject* ndi = (IntObject*)NDO.create("int");
+		ndi->val = PyLong_AsLong(in);
+		out = ndi;
+	}
 
-	const char* arg;
-	if (!PyArg_ParseTuple(args, "s", &arg)) {
+	return (Py_EmbObj*)PyEmbObject_New(out);
+}
+
+static PyObject* EmbObj_call(PyObject* in, PyObject* args) {
+
+	Py_EmbObj* self = ((Py_EmbObj*)in);
+	Object* ndo_out = nullptr;
+	
+	PyObject* list_arg;
+	const char* name_arg;
+
+	if (!PyArg_ParseTuple(args, "sO", &name_arg, &list_arg)) {
+		PyErr_SetString(PyExc_ValueError, "Expected a name and a list of ndo arguments");
 		return NULL;
 	}
 
-	string name = arg;
+	string name = name_arg;
+	PyListObject* list = (PyListObject*)list_arg;
 
-	Object* ndo_out;
-	if (ndo_cast(me->ndo_ptr, &ClassObjectType)) {
-		NDO_CASTV(ClassObject, me->ndo_ptr, ndo_class);
-		ndo_out = ndo_class->call(name, NULL);
+	alni n = PyList_Size(list_arg);
+	for (alni i = 0; i < n; i++) {
+		
+		PyObject* pItem = PyList_GetItem(list_arg, i);
+		Py_EmbObj* ndo_arg = nullptr;
+		
+		if (pItem->ob_type->tp_name != "EmbObj") {
+			Py_EmbObj* convert = NodesPyObject_fromPyObject(pItem);
+			if (!convert) {
+				PyErr_SetString(PyExc_TypeError, "list items must be Nodes Objects.");
+				return NULL;
+			}
+			ndo_arg = convert;
+		}
+		else {
+			ndo_arg = (Py_EmbObj*)pItem;
+		}
+
+		NDO.push(ndo_arg->ndo_ptr);
+	}
+
+
+	if (ndo_cast(self->ndo_ptr, &ClassObjectType)) {
+		NDO_CASTV(ClassObject, self->ndo_ptr, ndo_class);
+		ndo_out = ndo_class->call(name);
 	}
 	else {
-		ndo_out = NDO.call_type_method(name, me->ndo_ptr, NULL);
+		ndo_out = self->ndo_ptr->call_type_method(name);
 	}
+
 	return PyEmbObject_New(ndo_out);
 }
 
@@ -85,6 +120,7 @@ static PyObject* EmbObj_set(PyObject* self, PyObject* args) {
 	PyObject* arg;
 
 	if (!PyArg_ParseTuple(args, "O", &arg)) {
+		PyErr_SetString(PyExc_ValueError, "Expected a value");
 		return NULL;
 	}
 
@@ -151,7 +187,7 @@ static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 	Object* ndo_child;
 
 	if (!PyArg_ParseTuple(args, "OO", &arg_name, &arg_ndo)) {
-		return NULL;
+		PyErr_SetString(PyExc_ValueError, "function interface : str, ndo ");
 	}
 	if (string("str") != arg_name->ob_type->tp_name) {
 		return NULL;
@@ -166,7 +202,7 @@ static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 
 	Object* ndo = ((Py_EmbObj*)self)->ndo_ptr;
 
-	if (ndo->type != &ClassObjectType) {
+	if (!ndo_cast(ndo, &ClassObjectType)) {
 		return NULL;
 	}
 
@@ -175,15 +211,40 @@ static PyObject* EmbObj_add_child(PyObject* self, PyObject* args) {
 	return PyLong_FromLong(0);
 }
 
+static PyObject* EmbObj_copy(PyObject* self, PyObject* args) {
+
+	PyObject* arg_ndo;
+	Object* ndo_copy;
+
+	if (!PyArg_ParseTuple(args, "O", &arg_ndo)) {
+		PyErr_SetString(PyExc_ValueError, "expected a ndo");
+		return NULL;
+	}
+	if (string("EmbObj") != arg_ndo->ob_type->tp_name) {
+		PyErr_SetString(PyExc_ValueError, "expected a ndo");
+		return NULL;
+	}
+
+	ndo_copy = ((Py_EmbObj*)arg_ndo)->ndo_ptr;
+	Object* ndo = ((Py_EmbObj*)self)->ndo_ptr;
+
+	NDO.copy(ndo, ndo_copy);
+
+	return PyLong_FromLong(0);
+}
+
 static PyMethodDef Emb_methods[] = {
-	{"add_child", EmbObj_add_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
-	{"child", EmbObj_get_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"set", EmbObj_set, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"get", EmbObj_get, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
-	{"call", EmbObj_call, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"copy", EmbObj_copy, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"destroy", EmbObj_destroy, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"save", EmbObj_save, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{"load", EmbObj_load, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
-	{"destroy", EmbObj_destroy, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"call", EmbObj_call, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+
+	{"child", EmbObj_get_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	{"add_child", EmbObj_add_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
+	//{"del_child", EmbObj_add_child, METH_VARARGS | METH_KEYWORDS, "doc get_info"},
 	{NULL, NULL},
 };
 

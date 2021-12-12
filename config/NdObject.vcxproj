@@ -40,6 +40,7 @@
     <ClInclude Include="..\include\methodobject.h" />
     <ClInclude Include="..\include\nullobject.h" />
     <ClInclude Include="..\include\object.h" />
+    <ClInclude Include="..\include\objectcall.h" />
     <ClInclude Include="..\include\PyInterp.h" />
     <ClInclude Include="..\include\PyNdo.h" />
     <ClInclude Include="..\include\UI.h" />
