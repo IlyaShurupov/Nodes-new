@@ -2,9 +2,22 @@
 
 #include "UI.h"
 
+static void UIClass_load(File& file_self, UIClass* self) {
+	NDO_CASTV(MethodObject, self->member("proc_inputs"), run_meth);
+	if (!run_meth->code_flags) {
+		run_meth->code.ccode.method = UIClass::proc_inputs;
+	}
+
+	NDO_CASTV(MethodObject, self->member("present_output"), foo_meth);
+	if (!foo_meth->code_flags) {
+		foo_meth->code.ccode.method = UIClass::present_ouput;
+	}
+}
+
+
 ObjectStaticMethod UIMethods[] = {
 	{UIClass::proc_inputs, "proc_inputs"},
-	{UIClass::present_ouput, "present_outut"},
+	{UIClass::present_ouput, "present_output"},
 	{NULL, NULL}
 };
 
@@ -15,6 +28,7 @@ struct ObjectType UIClassType = {
 	.copy = UIClass::copy,
 	.size = sizeof(UIClass),
 	.name = "UI",
+	.load = (object_load)UIClass_load,
 };
 
 void UIClass::copy(Object* self, const Object* in) {}
@@ -23,6 +37,18 @@ void UIClass::constructor(Object* in) {}
 Object* UIClass::proc_inputs(Object* self, Object*) { return NDO_NULL; };
 Object* UIClass::present_ouput(Object* self, Object*) { return NDO_NULL; };
 
+
+static void GUIClass_load(File& file_self, GUIClass* self) {
+	NDO_CASTV(MethodObject, self->member("proc_inputs"), run_meth);
+	if (!run_meth->code_flags) {
+		run_meth->code.ccode.method = GUIClass::proc_inputs;
+	}
+
+	NDO_CASTV(MethodObject, self->member("present_output"), foo_meth);
+	if (!foo_meth->code_flags) {
+		foo_meth->code.ccode.method = GUIClass::present_ouput;
+	}
+}
 
 ObjectStaticMethod GUIMethods[] = {
 	{GUIClass::proc_inputs, "proc_inputs"},
@@ -37,6 +63,7 @@ struct ObjectType GUIClassType = {
 	.copy = GUIClass::copy,
 	.size = sizeof(GUIClass),
 	.name = "GUI",
+	.load = (object_load)GUIClass_load,
 };
 
 void GUIClass::constructor(Object* in) {
@@ -80,6 +107,17 @@ Object* GUIClass::present_ouput(Object* in, Object*) {
 	return NDO_NULL;
 };
 
+static void TUIClass_load(File& file_self, TUIClass* self) {
+	NDO_CASTV(MethodObject, self->member("proc_inputs"), run_meth);
+	if (!run_meth->code_flags) {
+		run_meth->code.ccode.method = TUIClass::proc_inputs;
+	}
+
+	NDO_CASTV(MethodObject, self->member("present_output"), foo_meth);
+	if (!foo_meth->code_flags) {
+		foo_meth->code.ccode.method = TUIClass::present_ouput;
+	}
+}
 
 ObjectStaticMethod TUIMethods[] = {
 	{TUIClass::proc_inputs, "proc_inputs"},
@@ -94,6 +132,7 @@ struct ObjectType TUIClassType = {
 	.copy = TUIClass::copy,
 	.size = sizeof(TUIClass),
 	.name = "TUI",
+	.load = (object_load)TUIClass_load,
 };
 
 void TUIClass::constructor(Object* in) {

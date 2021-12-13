@@ -47,8 +47,9 @@ struct ObjectTypeConversions {
 typedef void (*object_constructor)(Object* self);
 typedef void (*object_destructor)(Object* self);
 typedef void (*object_copy)(Object* self, const Object* target);
+typedef alni (*object_save_size)(Object* self);
 typedef void (*object_save)(Object*, File&);
-typedef Object* (*object_load)(File&);
+typedef void (*object_load)(File&, Object*);
 
 struct ObjectType {
 	const ObjectType* base;
@@ -58,6 +59,7 @@ struct ObjectType {
 	alni size = NULL;
 	string name;
 	const ObjectTypeConversions* convesions = NULL;
+	object_save_size save_size = NULL;
 	object_save save = NULL;
 	object_load load = NULL;
 	ObjectStaticMethod* type_methods = NULL;

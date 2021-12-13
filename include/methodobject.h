@@ -13,9 +13,9 @@ union MethoObjectCode {
 
 struct MethodObject : Object {
 
+	alni code_flags;
 	struct ClassObject* self;
 	MethoObjectCode code;
-	alni code_flags;
 
 	void assign(string pycode) {
 		if (code_flags == 1) {

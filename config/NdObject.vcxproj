@@ -28,6 +28,8 @@
     <ClCompile Include="..\scr\methodobject.cpp" />
     <ClCompile Include="..\scr\nullobject.cpp" />
     <ClCompile Include="..\scr\object.cpp" />
+    <ClCompile Include="..\scr\objectcall.cpp" />
+    <ClCompile Include="..\scr\objectsave.cpp" />
     <ClCompile Include="..\scr\PyInterp.cpp" />
     <ClCompile Include="..\scr\PyNdo.cpp" />
     <ClCompile Include="..\scr\UI.cpp" />

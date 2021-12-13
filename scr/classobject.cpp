@@ -17,33 +17,24 @@ void ClassObject::constructor(Object* in) {
 	self->members = NDO_CAST(DictObject, NDO.create("dict"));
 }
 
+static alni save_size(ClassObject* self) {
+	// dict file adress
+	return sizeof(alni);
+}
+
 static void save(ClassObject* self, File& file_self) {
-
-	// only dictinary file adress
-	alni save_size = 1;
-
-	// allocate mem by moving down avk adress
-	file_self.avl_adress += save_size;
-
 	// save dict adress
 	alni dict_adress = NDO.save(file_self, self->members);
 	file_self.write<alni>(&dict_adress);
 }
 
-static Object* load(File& file_self) {
-	ClassObject* self = (ClassObject*)NDO.create("class");
-
+static void load(File& file_self, ClassObject* self) {
 	alni dict_adress;
 	file_self.read<alni>(&dict_adress);
-
-	// find better solution
-	NDO.destroy(self->members);
 
 	Object* dictinary = NDO.load(file_self, dict_adress);
 
 	self->members = (DictObject*)dictinary;
-
-	return self;
 }
 
 struct ObjectType ClassObjectType = {
@@ -53,4 +44,7 @@ struct ObjectType ClassObjectType = {
 	.copy = ClassObject::copy,
 	.size = sizeof(ClassObject),
 	.name = "class",
+	.save_size = (object_save_size)save_size,
+	.save = (object_save)save,
+	.load = (object_load)load,
 };

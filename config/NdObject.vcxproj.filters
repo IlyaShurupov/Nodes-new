@@ -45,6 +45,12 @@
     <ClCompile Include="..\scr\PyNdo.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\scr\objectcall.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scr\objectsave.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\intobject.h">

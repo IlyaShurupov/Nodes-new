@@ -45,26 +45,42 @@ void MethodObject::from_string(Object* in, string code) {
 	self->assign(code);
 }
 
-static void save(MethodObject* self, File& file_self) {
+static alni save_size(MethodObject* self) {
 
-	file_self.avl_adress++;
-	file_self.write<alni>(&self->code_flags);
+	alni save_size = sizeof(self->code_flags);
+	save_size += sizeof(alni);
 
 	if (self->code_flags == 1) {
 		alni pycode_len = self->code.pycode.len();
+		save_size += pycode_len + 1;
+	}
 
-		file_self.avl_adress += pycode_len + 1;
+	return save_size;
+}
+
+static void save(MethodObject* self, File& file_self) {
+
+	alni method_self_adress = NDO.save(file_self, (Object*)self->self);
+	file_self.write<alni>(&method_self_adress);
+
+	file_self.write<alni>(&self->code_flags);
+	
+	if (self->code_flags == 1) {
+		alni pycode_len = self->code.pycode.len();
 
 		file_self.write<alni>(&pycode_len);
 		file_self.write_bytes(self->code.pycode.str, pycode_len);
 	} 
-
 }
 
-static Object* load(File& file_self) {
-	MethodObject* self = (MethodObject*)NDO.create("method");
+static void load(File& file_self, MethodObject* self) {
+	
+	alni method_self_adress;
+	file_self.read<alni>(&method_self_adress);
+	self->self = (ClassObject*)NDO.load(file_self, method_self_adress);
 
 	file_self.read<alni>(&self->code_flags);
+
 	if (self->code_flags == 1) {
 		alni len;
 		file_self.read<alni>(&len);
@@ -76,8 +92,6 @@ static Object* load(File& file_self) {
 
 		new (&self->code.pycode) string(pycode);
 	}
-
-	return self;
 }
 
 struct ObjectTypeConversions MethodTypeConversions = {
@@ -97,6 +111,7 @@ struct ObjectType MethodObjectType = {
 	.size = sizeof(MethodObject),
 	.name = "method",
 	.convesions = &MethodTypeConversions,
+	.save_size = (object_save_size)save_size,
 	.save = (object_save)save,
 	.load = (object_load)load,
 };

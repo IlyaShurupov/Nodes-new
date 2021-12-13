@@ -42,15 +42,16 @@ alnf IntObject::to_float(Object* self) {
 	return alnf(NDO_CAST(IntObject, self)->val);
 }
 
+static alni save_size(IntObject* self) {
+	return sizeof(alni);
+}
+
 static void save(IntObject* self, File& file_self) {
-	file_self.avl_adress += sizeof(alni);
 	file_self.write<alni>(&self->val);
 }
 
-static Object* load(File& file_self) {
-	IntObject* self = (IntObject*)NDO.create("int");
+static void load(File& file_self, IntObject* self) {
 	file_self.read<alni>(&self->val);
-	return self;
 }
 
 struct ObjectTypeConversions IntObjectTypeConversions = {
@@ -70,6 +71,7 @@ struct ObjectType IntObjectType = {
 	.size = sizeof(IntObject),
 	.name = "int",
 	.convesions = &IntObjectTypeConversions,
+	.save_size = (object_save_size)save_size,
 	.save = (object_save)save,
-	.load = load,
+	.load = (object_load)load,
 };

@@ -17,31 +17,32 @@ void DictObject::destructor(Object* self) {
 	dict->items.clear();
 }
 
-static void save(DictObject* self, File& file_self) {
-
+static alni save_size(DictObject* self) {
 	// calculate size needed
 	alni save_size = 0;
-	
+
 	// number on entries
-	save_size += sizeof(alni); 
-	
+	save_size += sizeof(alni);
+
 	for (auto item : self->items) {
-		// for string length
+		// string length
 		save_size += sizeof(alni);
-		// for string itself
+		// string itself
 		save_size += item->key.len() * sizeof(*item->key.str);
-		// for object file adress
+		// object file adress
 		save_size += sizeof(alni);
 	}
-	
-	// allocate mem by moving down avk adress
-	file_self.avl_adress += save_size;
+
+	return save_size;
+}
+
+static void save(DictObject* self, File& file_self) {
 
 	// write size
 	alni len = self->items.nentries;
 	file_self.write<alni>(&len);
 
-	// save hash pairs
+	// save hashmap pairs
 	for (auto item : self->items) {
 		// item val
 		alni ndo_object_adress = NDO.save(file_self, item->val);
@@ -56,8 +57,9 @@ static void save(DictObject* self, File& file_self) {
 	}
 }
 
-static Object* load(File& file_self) {
-	DictObject* self = (DictObject*)NDO.create("dict");
+static void load(File& file_self, DictObject* self) {
+
+	new (&self->items) hmap<Object*, string>();
 
 	alni len;
 	file_self.read<alni>(&len);
@@ -81,8 +83,6 @@ static Object* load(File& file_self) {
 		// add to dictinary
 		self->items.Put(key, val);
 	}
-
-	return self;
 }
 
 void DictObject::constructor(Object* self) {
@@ -100,6 +100,7 @@ struct ObjectType DictObjectType = {
 	.copy = DictObject::copy,
 	.size = sizeof(DictObject),
 	.name = "dict",
+	.save_size = (object_save_size)save_size,
 	.save = (object_save)save,
   .load = (object_load)load,
 };
