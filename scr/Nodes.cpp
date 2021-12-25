@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string.h>
 
-struct ObjectStaticMethod NodesCoreMethods[] = {
+ObjectStaticMethod NodesCoreMethods[] = {
 	{NodesCoreClass::run, "run"},
 	{NodesCoreClass::run, "console_foo"},
 	{NULL, NULL}
@@ -33,18 +33,6 @@ void NodesCoreClass::constructor(Object* in) {
 
 void NodesCoreClass::destructor(Object* in) {}
 
-static void load(File& file_self, NodesCoreClass* self) {
-	NDO_CASTV(MethodObject, self->member("run"), run_meth);
-	if (!run_meth->code_flags) {
-		run_meth->code.ccode.method = NodesCoreClass::run;
-	}
-	
-	NDO_CASTV(MethodObject, self->member("console_foo"), foo_meth);
-	if (!foo_meth->code_flags) {
-		foo_meth->code.ccode.method = NodesCoreClass::run;
-	}
-}
-
 struct ObjectType NodesCoreClassType = {
 	.base = &ClassObjectType,
 	.constructor = NodesCoreClass::constructor,
@@ -52,8 +40,12 @@ struct ObjectType NodesCoreClassType = {
 	.copy = NULL,
 	.size = sizeof(NodesCoreClass),
 	.name = "NodesCore",
-	.load = (object_load)load,
 };
+
+void NodesCoreClass::TypeInit() {
+	ClassObject::register_ccode(&NodesCoreClassType, NodesCoreMethods);
+	NDO.define(&NodesCoreClassType);
+}
 
 Object* NodesCoreClass::run(Object* in, Object* args) {
 

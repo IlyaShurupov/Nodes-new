@@ -7,6 +7,8 @@
 
 PyInterp GlobalMethod_PyInterp;
 
+StaticCCodeTable static_ccode_table;
+
 void MethodObject::constructor(Object* in) {
 	NDO_CASTV(MethodObject, in, self);
 
@@ -47,12 +49,21 @@ void MethodObject::from_string(Object* in, string code) {
 
 static alni save_size(MethodObject* self) {
 
-	alni save_size = sizeof(self->code_flags);
-	save_size += sizeof(alni);
+	// self adress
+	alni save_size = sizeof(alni);
 
+	// flags
+	save_size += sizeof(self->code_flags);
+
+	// python code
 	if (self->code_flags == 1) {
 		alni pycode_len = self->code.pycode.len();
-		save_size += pycode_len + 1;
+		save_size += pycode_len + sizeof(alni);
+	}
+	// ccode address name
+	else {
+		string ccode_address_name = static_ccode_table.address_name_from_adress(self->code.ccode);
+		save_size += ccode_address_name.len() + sizeof(alni);
 	}
 
 	return save_size;
@@ -60,37 +71,58 @@ static alni save_size(MethodObject* self) {
 
 static void save(MethodObject* self, File& file_self) {
 
+	// self save
 	alni method_self_adress = NDO.save(file_self, (Object*)self->self);
 	file_self.write<alni>(&method_self_adress);
 
+	// flags save
 	file_self.write<alni>(&self->code_flags);
 	
+	// pycode save
 	if (self->code_flags == 1) {
 		alni pycode_len = self->code.pycode.len();
 
 		file_self.write<alni>(&pycode_len);
 		file_self.write_bytes(self->code.pycode.str, pycode_len);
-	} 
+	}
+	// ccode address name save
+	else {
+		string ccode_address_name = static_ccode_table.address_name_from_adress(self->code.ccode);
+		alni ccode_address_name_len = ccode_address_name.len();
+
+		file_self.write<alni>(&ccode_address_name_len);
+		file_self.write_bytes(ccode_address_name.str, ccode_address_name_len);
+	}
 }
 
 static void load(File& file_self, MethodObject* self) {
 	
+	// self address
 	alni method_self_adress;
 	file_self.read<alni>(&method_self_adress);
+	
+	// load self
 	self->self = (ClassObject*)NDO.load(file_self, method_self_adress);
 
+	// read flags
 	file_self.read<alni>(&self->code_flags);
 
+	// read string
+	alni len;
+	file_self.read<alni>(&len);
+
+	// read key value
+	string saved_str;
+	saved_str.alloc(len);
+	file_self.read_bytes(saved_str.str, len);
+
+	// if pycode
 	if (self->code_flags == 1) {
-		alni len;
-		file_self.read<alni>(&len);
-
-		// read key value
-		string pycode;
-		pycode.alloc(len);
-		file_self.read_bytes(pycode.str, len);
-
-		new (&self->code.pycode) string(pycode);
+		new (&self->code.pycode) string(saved_str);
+	}
+	// read ccode adress name
+	else {
+		self->code.ccode = static_ccode_table.get(saved_str);
 	}
 }
 

@@ -4,6 +4,8 @@
 
 struct NodesCoreClass : ClassObject {
 
+	static void TypeInit();
+
 	static void destructor(Object* in);
 	static void constructor(Object* in);
 	static Object* run(Object* self, Object* args);

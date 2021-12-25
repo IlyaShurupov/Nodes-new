@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <corecrt.h>
+
 #define PY_SSIZE_T_CLEAN
 
 #ifdef _DEBUG

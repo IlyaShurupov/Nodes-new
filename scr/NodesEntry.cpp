@@ -17,10 +17,8 @@ int main() {
 	NDO.define(&DictObjectType);
 	NDO.define(&ClassObjectType);
 
-	NDO.define(&NodesCoreClassType);
-	NDO.define(&UIClassType);
-	NDO.define(&GUIClassType);
-	NDO.define(&TUIClassType);
+	NodesCoreClass::TypeInit();
+	UIClass::TypeInit();
 
 	NDO_CAST(ClassObject, NDO.create("NodesCore"))->call("run");
 }

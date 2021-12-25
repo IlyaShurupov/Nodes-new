@@ -13,6 +13,8 @@ struct UIClass : ClassObject {
 
 	static Object* proc_inputs(Object*, Object*);
 	static Object* present_ouput(Object*, Object*);
+
+	static void TypeInit();
 };
 
 
