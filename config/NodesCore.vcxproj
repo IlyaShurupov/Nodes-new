@@ -19,45 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\scr\classobject.cpp" />
-    <ClCompile Include="..\scr\dictobject.cpp" />
-    <ClCompile Include="..\scr\intobject.cpp" />
-    <ClCompile Include="..\scr\listobject.cpp" />
-    <ClCompile Include="..\scr\Nodes.cpp" />
-    <ClCompile Include="..\scr\NodesEntry.cpp" />
-    <ClCompile Include="..\scr\methodobject.cpp" />
-    <ClCompile Include="..\scr\nullobject.cpp" />
-    <ClCompile Include="..\scr\object.cpp" />
-    <ClCompile Include="..\scr\objectcall.cpp" />
-    <ClCompile Include="..\scr\objectsave.cpp" />
-    <ClCompile Include="..\scr\PyInterp.cpp" />
-    <ClCompile Include="..\scr\PyNdo.cpp" />
-    <ClCompile Include="..\scr\UI.cpp" />
+    <ProjectReference Include="..\..\Objects\config\Objects.vcxproj.vcxproj">
+      <Project>{8a1b6aad-c516-4b51-a93e-6d7b23d449fd}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\classobject.h" />
-    <ClInclude Include="..\include\dictobject.h" />
-    <ClInclude Include="..\include\intobject.h" />
-    <ClInclude Include="..\include\listobject.h" />
-    <ClInclude Include="..\include\methodobject.h" />
-    <ClInclude Include="..\include\nullobject.h" />
-    <ClInclude Include="..\include\object.h" />
-    <ClInclude Include="..\include\objectcall.h" />
-    <ClInclude Include="..\include\PyInterp.h" />
-    <ClInclude Include="..\include\PyNdo.h" />
+    <ClInclude Include="..\include\Nodes.h" />
     <ClInclude Include="..\include\UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Types\config\TypesLib\TypesLib.vcxproj">
-      <Project>{98d6ae72-22f4-4498-ace5-21ad0b4abf0a}</Project>
-    </ProjectReference>
+    <ClCompile Include="..\src\Nodes.cpp" />
+    <ClCompile Include="..\src\NodesEntry.cpp" />
+    <ClCompile Include="..\src\UI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8A1B6AAD-C516-4B51-A93E-6D7B23D449FD}</ProjectGuid>
+    <ProjectGuid>{597A22C1-2727-4531-A4F3-2B9A46D7E807}</ProjectGuid>
     <RootNamespace>Types</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>NodesCore</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -116,13 +97,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\out\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\out\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -168,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Objects\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
