@@ -1,57 +1,45 @@
 
 #include "Nodes.h"
 
-#include "intobject.h"
-#include "dictobject.h"
-#include "classobject.h"
-#include "methodobject.h"
-#include "listobject.h"
+#include "gui.h"
+#include "tui.h"
 
-#include <iostream>
-#include <string.h>
+#include "timer.h"
 
-ObjectStaticMethod NodesCoreMethods[] = {
-	{NodesCoreClass::run, "run"},
-	{NodesCoreClass::run, "console_foo"},
-	{NULL, NULL}
-};
+using namespace nd;
 
-void NodesCoreClass::constructor(Object* in) {
-	NDO_CASTV(NodesCoreClass, in, self);
-
-	self->add_methods(NodesCoreMethods);
-
-	NDO_CASTV(IntObject, NDO.create("int"), int1)->val = 60;
-	self->members->items.Put("fps", int1);
-
-	NDO_CASTV(ListObject, NDO.create("list"), uis);
-	uis->items.PushBack(NDO.create("GUI"));
-	uis->items.PushBack(NDO.create("TUI"));
-
-	self->members->items.Put("uis", uis);
-}
-
-void NodesCoreClass::destructor(Object* in) {}
-
-struct ObjectType NodesCoreClassType = {
-	.base = &ClassObjectType,
-	.constructor = NodesCoreClass::constructor,
-	.destructor = NodesCoreClass::destructor,
+struct obj::ObjectType NodesCore::TypeData = {
+	.base = &obj::ClassObject::TypeData,
+	.constructor = (obj::object_constructor) NodesCore::constructor,
+	.destructor = (obj::object_destructor) NodesCore::destructor,
 	.copy = NULL,
-	.size = sizeof(NodesCoreClass),
+	.size = sizeof(NodesCore),
 	.name = "NodesCore",
 };
 
-void NodesCoreClass::TypeInit() {
-	ClassObject::register_ccode(&NodesCoreClassType, NodesCoreMethods);
-	NDO.define(&NodesCoreClassType);
+void NodesCore::constructor(NodesCore* self) {
+
+	NDO_CASTV(obj::IntObject, obj::NDO->create("int"), int1)->val = 160;
+	NDO_CASTV(obj::ListObject, obj::NDO->create("list"), uis);
+
+	nd::GUI* gui = (nd::GUI*)obj::NDO->create("Gui");
+	gui->debug_init(self);
+
+	nd::TUI* tui = (nd::TUI*) obj::NDO->create("Tui");
+	tui->initializeInputs(gui);
+
+	uis->items.pushBack(gui);
+	uis->items.pushBack(tui);
+
+	self->addMember(uis, "uis");
+	self->addMember(int1, "fps");
 }
 
-Object* NodesCoreClass::run(Object* in, Object* args) {
+void NodesCore::destructor(NodesCore* in) {}
 
-	NDO_CASTV(NodesCoreClass, in, self);
+void NodesCore::run() {
 
-	NDO_CASTV(ListObject, self->member("uis"), uis);
+	obj::ListObject* uis = getMember<obj::ListObject>("uis");
 
 	/*
 	ObList& Threads = GETOBJ(ObList, this, Threads);
@@ -60,41 +48,23 @@ Object* NodesCoreClass::run(Object* in, Object* args) {
 
 	NDCORELOOP: {
 
-		Timer timer = Timer((uint8)(1000.f / NDO_CAST(IntObject, self->member("fps"))->val));
+		tp::Timer timer(tp::time_ms(1000.f / getMember<obj::IntObject>("fps")->val));
 
 		// Pump Requests From UIs
 		for (auto ui : uis->items) {
-			NDO_CAST(ClassObject, ui.Data())->call("proc_inputs");
+			NDO_CASTV(UI, ui.data(), ui_component);
+			if (ui_component) ui_component->procInputs();
 		}
 
-		std::string cmd;
-		std::string line;
-		
-		do {
-			cmd += line + "\n";
-			std::getline(std::cin, line);
-		} while (line != "end");
-
-		string cmd_out;
-		cmd_out = cmd.c_str();
-
-		NDO_CASTV(MethodObject, self->member("console_foo"), foo_method);
-		foo_method->assign(cmd_out.str);
-		self->call("console_foo");
-
-		const string* out = NdLog_read();
-		if (out) {
-			std::cout << out->str;
-		}
 
 		// Output to the user
 		for (auto ui : uis->items) {
-			NDO_CAST(ClassObject, ui.Data())->call("present_output");
+			NDO_CASTV(UI, ui.data(), ui_component);
+			if (ui_component) ui_component->presentOutput();
 		}
 
-		timer.wait_out();
+		timer.wait();
 
 	} goto NDCORELOOP;
 
-	return NDO_NULL;
 }

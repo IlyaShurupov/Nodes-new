@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,21 +19,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\glew\build\vc12\glew_static.vcxproj">
+      <Project>{664e6f0d-6784-4760-9565-d54f8eb1edf4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\glfw\config\src\glfw.vcxproj">
+      <Project>{8fb23769-990f-3014-9d36-cd40b93cf151}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\imgw\cfg\imgw.vcxproj">
+      <Project>{6e225d12-1c66-4a38-bee5-71c4dbec0521}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lunasvg\config\lunasvg_static.vcxproj">
+      <Project>{4feb32b5-cd61-4d66-93e7-473da0fc5ec5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\nanovg\vs\nanovg.vcxproj">
+      <Project>{5b129a8b-38b4-4c86-a997-3d788809c08f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Objects\config\Objects.vcxproj">
       <Project>{8a1b6aad-c516-4b51-a93e-6d7b23d449fd}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Objects\config\Objects.vcxproj.vcxproj">
-      <Project>{8a1b6aad-c516-4b51-a93e-6d7b23d449fd}</Project>
+    <ProjectReference Include="..\..\soil\config\soil_static.vcxproj">
+      <Project>{2330bd62-8f88-4135-bb43-4740c2d4dc55}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\glw\cfg\glw.vcxproj">
+      <Project>{89c59fe4-0566-4a6b-b3d5-b6f11076e744}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\Nodes.h" />
-    <ClInclude Include="..\include\UI.h" />
+    <ClInclude Include="..\inc\gui.h" />
+    <ClInclude Include="..\inc\nodes.h" />
+    <ClInclude Include="..\inc\operator.h" />
+    <ClInclude Include="..\inc\requester.h" />
+    <ClInclude Include="..\inc\tui.h" />
+    <ClInclude Include="..\inc\ui.h" />
+    <ClInclude Include="..\inc\widget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Nodes.cpp" />
-    <ClCompile Include="..\src\NodesEntry.cpp" />
-    <ClCompile Include="..\src\UI.cpp" />
+    <ClCompile Include="..\src\entry.cpp" />
+    <ClCompile Include="..\src\gui.cpp" />
+    <ClCompile Include="..\src\nodes.cpp" />
+    <ClCompile Include="..\src\operator.cpp" />
+    <ClCompile Include="..\src\requester.cpp" />
+    <ClCompile Include="..\src\tui.cpp" />
+    <ClCompile Include="..\src\ui.cpp" />
+    <ClCompile Include="..\src\widget.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -45,13 +73,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -90,39 +118,45 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\out\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(ProjectName)_$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(ProjectName)_$(Platform)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\out\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(ProjectName)_$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(ProjectName)_$(Platform)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\bin\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(ProjectName)_$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(ProjectName)_$(Platform)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\bin\.tmp\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\bin\$(ProjectName)_$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\bin\.tmp\$(ProjectName)_$(Platform)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Dev\src\glew\include;D:\Dev\src\glfw\include;$(ProjectDir)..\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\..\objects\include;$(ProjectDir)..\..\types\modules\common\inc;$(ProjectDir)..\..\types\modules\allocator\inc;$(ProjectDir)..\..\types\modules\filesystem\inc;$(ProjectDir)..\..\types\modules\container\inc;$(ProjectDir)..\..\types\modules\glw\inc;$(ProjectDir)..\..\types\modules\math\inc;$(ProjectDir)..\..\types\modules\string\inc;$(ProjectDir)..\..\glew\include;$(ProjectDir)..\..\glfw\include;$(ProjectDir)..\..\soil\include;$(ProjectDir)..\..\soil\src;$(ProjectDir)..\..\lunasvg\include;$(ProjectDir)..\..\imgw\inc;$(ProjectDir)..\..\imgw\ext\imgui\;$(ProjectDir)..\..\imgw\ext\imgu-notify\;$(ProjectDir)..\..\imgw\ext\implot\;$(ProjectDir)..\..\imgui\backends;$(ProjectDir)..\..\nanovg\src</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;lunasvg.lib;soil.lib;filesystem.lib;glew32sd.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>python $(ProjectDir)install.py $(ProjectDir) $(OutDirFullPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -130,11 +164,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Dev\src\glew\include;D:\Dev\src\glfw\include;$(ProjectDir)..\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\..\objects\include;$(ProjectDir)..\..\types\modules\common\inc;$(ProjectDir)..\..\types\modules\allocator\inc;$(ProjectDir)..\..\types\modules\filesystem\inc;$(ProjectDir)..\..\types\modules\container\inc;$(ProjectDir)..\..\types\modules\glw\inc;$(ProjectDir)..\..\types\modules\math\inc;$(ProjectDir)..\..\types\modules\string\inc;$(ProjectDir)..\..\glew\include;$(ProjectDir)..\..\glfw\include;$(ProjectDir)..\..\soil\include;$(ProjectDir)..\..\soil\src;$(ProjectDir)..\..\lunasvg\include;$(ProjectDir)..\..\imgw\inc;$(ProjectDir)..\..\imgw\ext\imgui\;$(ProjectDir)..\..\imgw\ext\imgu-notify\;$(ProjectDir)..\..\imgw\ext\implot\;$(ProjectDir)..\..\imgui\backends;$(ProjectDir)..\..\nanovg\src</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -142,29 +177,37 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;filesystem.lib;lunasvg.lib;soil.lib;glew32s.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>python $(ProjectDir)install.py $(ProjectDir) $(OutDirFullPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Objects\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\..\objects\include;$(ProjectDir)..\..\types\modules\common\inc;$(ProjectDir)..\..\types\modules\allocator\inc;$(ProjectDir)..\..\types\modules\filesystem\inc;$(ProjectDir)..\..\types\modules\container\inc;$(ProjectDir)..\..\types\modules\glw\inc;$(ProjectDir)..\..\types\modules\math\inc;$(ProjectDir)..\..\types\modules\string\inc;$(ProjectDir)..\..\glew\include;$(ProjectDir)..\..\glfw\include;$(ProjectDir)..\..\soil\include;$(ProjectDir)..\..\soil\src;$(ProjectDir)..\..\lunasvg\include;$(ProjectDir)..\..\imgw\inc;$(ProjectDir)..\..\imgw\ext\imgui\;$(ProjectDir)..\..\imgw\ext\imgu-notify\;$(ProjectDir)..\..\imgw\ext\implot\;$(ProjectDir)..\..\imgui\backends;$(ProjectDir)..\..\nanovg\src</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Debug;$(ProjectDir)..\..\glfw\lib\x64\Debug;$(ProjectDir)..\..\nanovg\lib\x64\Debug;$(ProjectDir)..\..\glew\lib\Debug\x64;$(ProjectDir)..\..\python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>python310.lib;nanovg.lib;types.lib;glfw3.lib;glew32sd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;lunasvg.lib;soil.lib;filesystem.lib;glew32sd.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>python $(ProjectDir)install.py $(ProjectDir) $(OutDirFullPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -172,21 +215,24 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\Types\include;$(ProjectDir)..\..\Python310\include</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\..\objects\include;$(ProjectDir)..\..\types\modules\common\inc;$(ProjectDir)..\..\types\modules\allocator\inc;$(ProjectDir)..\..\types\modules\filesystem\inc;$(ProjectDir)..\..\types\modules\container\inc;$(ProjectDir)..\..\types\modules\glw\inc;$(ProjectDir)..\..\types\modules\math\inc;$(ProjectDir)..\..\types\modules\string\inc;$(ProjectDir)..\..\glew\include;$(ProjectDir)..\..\glfw\include;$(ProjectDir)..\..\soil\include;$(ProjectDir)..\..\soil\src;$(ProjectDir)..\..\lunasvg\include;$(ProjectDir)..\..\imgw\inc;$(ProjectDir)..\..\imgw\ext\imgui\;$(ProjectDir)..\..\imgw\ext\imgu-notify\;$(ProjectDir)..\..\imgw\ext\implot\;$(ProjectDir)..\..\imgui\backends;$(ProjectDir)..\..\nanovg\src</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Types\lib\Release;$(ProjectDir)..\..\glfw\lib\x64\Debug;$(ProjectDir)..\..\nanovg\lib\x64\Release;$(ProjectDir)..\..\glew\lib\Release\x64;$(ProjectDir)..\..\python310\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>python310.lib;nanovg.lib;types.lib;glfw3.lib;glew32s.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;filesystem.lib;lunasvg.lib;soil.lib;glew32s.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>python $(ProjectDir)install.py $(ProjectDir) $(OutDirFullPath)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

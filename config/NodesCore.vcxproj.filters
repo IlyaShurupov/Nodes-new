@@ -9,21 +9,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\Nodes.h">
+    <ClInclude Include="..\inc\gui.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\UI.h">
+    <ClInclude Include="..\inc\nodes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\tui.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\ui.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\widget.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\operator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\requester.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Nodes.cpp">
+    <ClCompile Include="..\src\entry.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\NodesEntry.cpp">
+    <ClCompile Include="..\src\gui.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\UI.cpp">
+    <ClCompile Include="..\src\nodes.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tui.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ui.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\widget.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\operator.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\requester.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
