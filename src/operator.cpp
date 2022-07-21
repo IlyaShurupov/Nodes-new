@@ -57,6 +57,7 @@ class NodesCoreTypeOperators : public TypeOperators {
 	} sleep_op;
 
 	struct Terminate : public Operator {
+		
 		struct Invoke : public OpCallBack {
 			Invoke() {
 				arg_interface.put("exit code", obj::NDO->create("int"));
@@ -64,21 +65,45 @@ class NodesCoreTypeOperators : public TypeOperators {
 				description = "invoker";
 			}
 			static void exec(Operator* op, obj::DictObject* args) {
-				tp::terminate(OpCallBack::getArg<obj::IntObject>(args, "exit code")->val);
+				nd::terminate_flag = true;
+				nd::terminate_code = (int) getArg<obj::IntObject>(args, "exit code")->val;
 			}
 		} invoke_callback;
 
 		Terminate() {
-			description = "Immediately terminates the programm";
+			description = "Exits the programm";
 			callbacks.put("invoke", &invoke_callback);
 		}
 	} terminate_op;
+
+	struct SaveOperartor : public Operator {
+
+		struct Invoke : public OpCallBack {
+			Invoke() {
+				arg_interface.put("save path", obj::NDO->create("str"));
+				arg_interface.put("object", obj::NDO->create("link"));
+				func = exec;
+				description = "invoker";
+			}
+			static void exec(Operator* op, obj::DictObject* args) {
+				tp::string path = getArg<obj::StringObject>(args, "save path")->val;
+				obj::Object* object = getArg<obj::LinkObject>(args, "object")->link;
+				bool suc = NDO->save(object, path);
+			}
+		} invoke_callback;
+
+		SaveOperartor() {
+			description = "Saves the object to disk";
+			callbacks.put("invoke", &invoke_callback);
+		}
+	} save_op;
 
 	public: 
 
 	NodesCoreTypeOperators() {
 		operators.put("sleep", &sleep_op);
 		operators.put("terminate", &terminate_op);
+		operators.put("save", &save_op);
 	}
 
 };

@@ -7,6 +7,12 @@ using namespace nd;
 using namespace tp;
 using namespace obj;
 
+tp::Array<Object*> childs_retrival(Requester* self) {
+	tp::Array<Object*> out;
+	out.pushBack(self->callbacks_arguments);
+	return out;
+}
+
 struct obj::ObjectType Requester::TypeData = {
 	.base = NULL,
 	.constructor = (obj::object_constructor) Requester::constructor,
@@ -14,6 +20,10 @@ struct obj::ObjectType Requester::TypeData = {
 	.copy = (obj::object_copy) Requester::copy,
 	.size = sizeof(Requester),
 	.name = "Requester",
+	.save_size = (obj::object_save_size) Requester::save_size,
+	.save = (obj::object_save) Requester::save,
+	.load = (obj::object_load) Requester::load,
+	.childs_retrival = (object_debug_all_childs_retrival) childs_retrival
 };
 
 void Requester::constructor(Requester* self) {
@@ -82,8 +92,6 @@ void Requester::load(File& file_self, Requester* self) {
 	if (!is_initialized) {
 		return;
 	}
-
-	NDO->destroy(self->callbacks_arguments);
 
 	alni ndo_object_adress;
 	file_self.read<alni>(&ndo_object_adress);

@@ -125,25 +125,24 @@ bool Comparator::isMet() {
 	return expr;
 }
 
-struct obj::ObjectType ShortcutCompareExpr::TypeData = {
+struct obj::ObjectType ShortcutTrigger::TypeData = {
 	.base = &obj::ClassObject::TypeData,
-	.constructor = (obj::object_constructor) ShortcutCompareExpr::constructor,
-	.destructor = (obj::object_destructor) ShortcutCompareExpr::destructor,
-	.copy = (obj::object_copy) ShortcutCompareExpr::copy,
-	.size = sizeof(ShortcutCompareExpr),
-	.name = "CompareExpr",
+	.constructor = (obj::object_constructor) ShortcutTrigger::constructor,
+	.destructor = (obj::object_destructor) ShortcutTrigger::destructor,
+	.copy = (obj::object_copy) ShortcutTrigger::copy,
+	.size = sizeof(ShortcutTrigger),
+	.name = "Trigger",
 };
 
-void ShortcutCompareExpr::constructor(nd::ShortcutCompareExpr* self) {
+void ShortcutTrigger::constructor(nd::ShortcutTrigger* self) {
 	self->createMember("dict", "comparators");
-	self->createMember("str", "modal arg");
-	self->createMember("int", "triggered count");
+	self->createMember("bool", "Enable");
 }
 
-void ShortcutCompareExpr::destructor(nd::ShortcutCompareExpr* self) {}
-void ShortcutCompareExpr::copy(nd::ShortcutCompareExpr* self, nd::ShortcutCompareExpr* blueprint) {}
+void ShortcutTrigger::destructor(nd::ShortcutTrigger* self) {}
+void ShortcutTrigger::copy(nd::ShortcutTrigger* self, nd::ShortcutTrigger* blueprint) {}
 
-bool ShortcutCompareExpr::isMet() {
+bool ShortcutTrigger::isMet() {
 	obj::DictObject* comparators = getMember<obj::DictObject>("comparators");
 
 	bool res = false;
@@ -159,36 +158,62 @@ bool ShortcutCompareExpr::isMet() {
 		}
 	}
 
-	if (res) {
-		getMember<obj::IntObject>("triggered count")->val++;
-	}
-
 	return res;
 }
 
+tp::Array<obj::Object*> childs_retrival(nd::Shortcut* self) {
+	tp::Array<obj::Object*> out;
+	out.pushBack(self->callbacks_triggers);
+	return out;
+}
+
 struct obj::ObjectType Shortcut::TypeData = {
-	.base = &obj::ClassObject::TypeData,
+	.base = &nd::Requester::TypeData,
 	.constructor = (obj::object_constructor) Shortcut::constructor,
 	.destructor = (obj::object_destructor) Shortcut::destructor,
 	.copy = (obj::object_copy) Shortcut::copy,
 	.size = sizeof(Shortcut),
 	.name = "Shortcut",
+	.save_size = (obj::object_save_size) Shortcut::save_size,
+	.save = (obj::object_save) Shortcut::save,
+	.load = (obj::object_load) Shortcut::load,
+	.childs_retrival = (obj::object_debug_all_childs_retrival) childs_retrival,
 };
 
 void Shortcut::constructor(nd::Shortcut* self) {
-	self->createMember("CompareExpr", "invoker");
-	self->createMember("dict", "modal signals");
+	self->callbacks_triggers = (obj::DictObject*) obj::NDO->create("dict");
 }
 
-void Shortcut::destructor(nd::Shortcut* self) {}
-void Shortcut::copy(nd::Shortcut* self, nd::Shortcut* blueprint) {}
+void Shortcut::destructor(nd::Shortcut* self) {
+	obj::NDO->destroy(self->callbacks_triggers);
+}
+void Shortcut::copy(nd::Shortcut* self, nd::Shortcut* blueprint) {
+	obj::NDO->copy(self->callbacks_triggers, blueprint->callbacks_triggers);
+}
+
+tp::alni Shortcut::save_size(Shortcut* self) {
+	return sizeof(tp::alni); // dict object adress
+}
+
+void Shortcut::save(Shortcut* self, tp::File& file_self) {
+	// save dictobject
+	tp::alni ndo_object_adress = obj::NDO->save(file_self, self->callbacks_triggers);
+	file_self.write<tp::alni>(&ndo_object_adress);
+}
+
+void Shortcut::load(tp::File& file_self, Shortcut* self) {
+	tp::alni ndo_object_adress;
+	file_self.read<tp::alni>(&ndo_object_adress);
+	self->callbacks_triggers = NDO_CAST(obj::DictObject, obj::NDO->load(file_self, ndo_object_adress));
+}
 
 void Shortcut::proc() {
-	getMember<ShortcutCompareExpr>("invoker")->isMet();
-	for (auto& modal : getMember<obj::DictObject>("modal signals")->items) {
-		ShortcutCompareExpr* expr = NDO_CAST(ShortcutCompareExpr, modal.iter->val);
-		if (expr) {
-			expr->isMet();
+	for (auto modal : callbacks_triggers->items) {
+		ShortcutTrigger* expr = NDO_CAST(ShortcutTrigger, modal->val);
+		if (expr && expr->isMet()) {
+			if (callbacks_arguments->items.presents(modal->key)) {
+				call(modal->key);
+			}
 		}
 	}
 }

@@ -67,6 +67,9 @@ struct RootWidget::Vtable RootWidget::vtable = {
 	(void (*)(Widget*, GUI*)) & RootWidget::presentOutput,
 };
 
+void RootWidget::procInputs(RootWidget* self, GUI* gui) {
+	//tp::rect<tp::alni> rec = self->getRect();
+}
 
 void RootWidget::presentOutput(RootWidget* self, GUI* gui) {
 	tp::rect<tp::alni> rec = self->getRect();

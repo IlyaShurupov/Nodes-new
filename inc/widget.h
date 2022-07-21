@@ -63,7 +63,7 @@ namespace nd {
 		static void copy(Widget* self, const Widget* in) {}
 
 
-		static void procInputs(RootWidget* self, GUI* gui) {}
+		static void procInputs(RootWidget* self, GUI* gui);
 		static void presentOutput(RootWidget* self, GUI* gui);
 	};
 };

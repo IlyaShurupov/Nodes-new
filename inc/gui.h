@@ -20,8 +20,8 @@ namespace nd {
 		static void destructor(GUI* self);
 		static void copy(GUI* self, const GUI* in);
 		static tp::alni save_size(GUI* self) { return 0; };
-		static void save(GUI* self, tp::File& file_self) {};
-		static void load(tp::File& file_self, GUI* self) {};
+		static void save(GUI* self, tp::File& file_self);
+		static void load(tp::File& file_self, GUI* self);
 
 		tp::ogl::opengl gl;
 		tp::ogl::window window;
@@ -38,11 +38,14 @@ namespace nd {
 
 		NVGcontext* vg;
 
+		void init();
+
 		static void procInputs(GUI* self);
 		static void presentOutput(GUI* self);
 		void draw();
 
 		void debug_init(Object* core);
 		void draw_debug_info();
+		void update_winrec_from_root();
 	};
 };

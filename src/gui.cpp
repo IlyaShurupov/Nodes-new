@@ -30,28 +30,14 @@ struct GUI::Vtable GUI::vtable = {
 
 
 void GUI::constructor(GUI* self) {
-	new (&self->gl) tp::ogl::opengl();
-	new (&self->window) tp::ogl::window({1, 1}, tp::ogl::window::UNDECORATED);
-	new (&self->imgui) ImGui::DefaultWraper();
-	new (&self->fps) tp::fpscount();
-	new (&self->window_fps) tp::fpscount();
-	new (&self->debug_oedit) ImGui::ImGuiObjectEditor();
-
-	self->window.col_clear = tp::rgba(0, 0, 0, 0);
-
-	self->vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-	self->imgui.init(&self->window);
-
-	self->need_update = false;
-	self->clear_frames = true;
-	self->whait_for_event = false;
-	self->debug_ui = false;
 
 	RootWidget* root = NDO_CAST(RootWidget, obj::NDO->create("RootWidget"));
 	obj::LinkObject* active = NDO_CAST(obj::LinkObject, obj::NDO->create("link"));
 	active->link = root;
 	self->addMember(root, "root");
 	self->addMember(active, "active widget");
+
+	self->init();
 };
 
 void GUI::destructor(GUI* self) {
@@ -68,7 +54,35 @@ void GUI::copy(GUI* self, const GUI* in) {
 	self->window = in->window;
 	self->imgui = in->imgui;
 	self->vg = in->vg;
-};
+}
+
+void nd::GUI::save(GUI* self, tp::File& file_self) {}
+
+void nd::GUI::load(tp::File& file_self, GUI* self) {
+	self->init();
+}
+
+void nd::GUI::init() {
+	new (&gl) tp::ogl::opengl();
+	new (&window) tp::ogl::window({1, 1}, tp::ogl::window::UNDECORATED | tp::ogl::window::HIDDEN);
+	new (&imgui) ImGui::DefaultWraper();
+	new (&fps) tp::fpscount();
+	new (&window_fps) tp::fpscount();
+	new (&debug_oedit) ImGui::ImGuiObjectEditor();
+
+	window.col_clear = tp::rgba(0, 0, 0, 0);
+
+	vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+	imgui.init(&window);
+
+	need_update = false;
+	clear_frames = true;
+	whait_for_event = false;
+	debug_ui = true;
+
+	update_winrec_from_root();
+	window.showWindow();
+}
 
 void GUI::procInputs(GUI* self) {
 	self->window.update_event_queue(self->whait_for_event && (!self->need_update));
@@ -77,9 +91,7 @@ void GUI::procInputs(GUI* self) {
 		self->debug_ui = !self->debug_ui;
 	}
 
-	// update window rect from root
-	tp::rect<tp::alni> rec = self->getMember<nd::Widget>("root")->getRect();
-	self->window.setRectWorld(tp::rect<tp::alnf>((tp::alnf) rec.x, (tp::alnf) rec.y, (tp::alnf) rec.z, (tp::alnf) rec.w));
+	self->update_winrec_from_root();
 };
 
 void GUI::presentOutput(GUI* self) {
@@ -140,6 +152,13 @@ void GUI::draw_debug_info() {
 	ImGui::End();
 
 	debug_oedit.Draw();
+}
+
+void nd::GUI::update_winrec_from_root() {
+	nd::Widget* root_widget = getMember<nd::Widget>("root");
+	tp::rect<tp::alni> rec = root_widget->getRect();
+	window.setRectWorld(tp::rect<tp::alnf>((tp::alnf) rec.x, (tp::alnf) rec.y, (tp::alnf) rec.z, (tp::alnf) rec.w));
+	root_widget->setRect(rec.x, rec.y, (tp::alni) window.size.x, (tp::alni) window.size.y);
 }
 
 void GUI::debug_init(Object* core) {

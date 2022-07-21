@@ -2,6 +2,7 @@
 #pragma once
 
 #include "primitives/primitives.h"
+#include "requester.h"
 
 #include "gui.h"
 
@@ -25,19 +26,27 @@ namespace nd {
 		bool isMet();
 	};
 
-	struct ShortcutCompareExpr : public obj::ClassObject {
+	struct ShortcutTrigger : public obj::ClassObject {
 		static struct obj::ObjectType TypeData;
-		static void constructor(nd::ShortcutCompareExpr* self);
-		static void destructor(nd::ShortcutCompareExpr* self);
-		static void copy(nd::ShortcutCompareExpr* self, nd::ShortcutCompareExpr* blueprint);
+		static void constructor(nd::ShortcutTrigger* self);
+		static void destructor(nd::ShortcutTrigger* self);
+		static void copy(nd::ShortcutTrigger* self, nd::ShortcutTrigger* blueprint);
 		bool isMet();
 	};
 
-	struct Shortcut : public obj::ClassObject {
+	struct Shortcut : public nd::Requester {
 		static struct obj::ObjectType TypeData;
+		
+		obj::DictObject* callbacks_triggers;
+
 		static void constructor(nd::Shortcut* self);
 		static void destructor(nd::Shortcut* self);
 		static void copy(nd::Shortcut* self, nd::Shortcut* blueprint);
+
+		static tp::alni save_size(Shortcut* self);
+		static void save(Shortcut* self, tp::File& file_self);
+		static void load(tp::File& file_self, Shortcut* self);
+
 		void proc();
 	};
 

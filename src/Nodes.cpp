@@ -8,6 +8,11 @@
 
 using namespace nd;
 
+namespace nd {
+	bool terminate_flag;
+	int terminate_code;
+};
+
 struct obj::ObjectType NodesCore::TypeData = {
 	.base = &obj::ClassObject::TypeData,
 	.constructor = (obj::object_constructor) NodesCore::constructor,
@@ -15,6 +20,9 @@ struct obj::ObjectType NodesCore::TypeData = {
 	.copy = NULL,
 	.size = sizeof(NodesCore),
 	.name = "NodesCore",
+	.save_size = (obj::object_save_size) NodesCore::save_size,
+	.save = (obj::object_save) NodesCore::save,
+	.load = (obj::object_load) NodesCore::load,
 };
 
 void NodesCore::constructor(NodesCore* self) {
@@ -37,6 +45,19 @@ void NodesCore::constructor(NodesCore* self) {
 
 void NodesCore::destructor(NodesCore* in) {}
 
+void nd::NodesCore::save(NodesCore* self, tp::File& file_self) {}
+
+void nd::NodesCore::load(tp::File& file_self, NodesCore* self) {
+	obj::ListObject* uis = self->getMember<obj::ListObject>("uis");
+
+	for (auto ui : uis->items) {
+		nd::GUI* gui = NDO_CAST(nd::GUI, ui.data());
+		if (gui) {
+			gui->debug_init(self);
+		}
+	}
+}
+
 void NodesCore::run() {
 
 	obj::ListObject* uis = getMember<obj::ListObject>("uis");
@@ -46,7 +67,7 @@ void NodesCore::run() {
 	ObList& Requests = GETOBJ(ObList, this, Requests);
 	*/
 
-	NDCORELOOP: {
+	while (!nd::terminate_flag) {
 
 		tp::Timer timer(tp::time_ms(1000.f / getMember<obj::IntObject>("fps")->val));
 
@@ -65,6 +86,5 @@ void NodesCore::run() {
 
 		timer.wait();
 
-	} goto NDCORELOOP;
-
+	}
 }
