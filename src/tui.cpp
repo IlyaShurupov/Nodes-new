@@ -167,6 +167,16 @@ tp::Array<obj::Object*> childs_retrival(nd::Shortcut* self) {
 	return out;
 }
 
+tp::alni allocated_size(Shortcut* self) {
+	return sizeof(obj::DictObject*);
+}
+
+tp::alni allocated_size_recursive(Shortcut* self) {
+	tp::alni out = sizeof(obj::DictObject*);
+	out += obj::NDO->objsize_ram_recursive_util(self->callbacks_triggers, self->callbacks_triggers->type);
+	return out;
+}
+
 struct obj::ObjectType Shortcut::TypeData = {
 	.base = &nd::Requester::TypeData,
 	.constructor = (obj::object_constructor) Shortcut::constructor,
@@ -178,6 +188,8 @@ struct obj::ObjectType Shortcut::TypeData = {
 	.save = (obj::object_save) Shortcut::save,
 	.load = (obj::object_load) Shortcut::load,
 	.childs_retrival = (obj::object_debug_all_childs_retrival) childs_retrival,
+	.allocated_size = (obj::object_allocated_size) allocated_size,
+	.allocated_size_recursive = (obj::object_allocated_size_recursive) allocated_size_recursive
 };
 
 void Shortcut::constructor(nd::Shortcut* self) {

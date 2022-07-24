@@ -10,6 +10,20 @@
 
 using namespace nd;
 
+tp::alni allocated_size(GUI* self) {
+	tp::alni out = 0;
+	out += sizeof(tp::ogl::opengl);
+	out += self->window.sizeAllocatedMem();
+	out += sizeof(bool) * 4;
+	out += sizeof(tp::fpscount) * 2;
+	out += sizeof(ImGui::DefaultWraper);
+	out += sizeof(ImGui::DefaultWraper);
+	out += sizeof(NVGcontext*);
+	out += sizeof_NVGcontext();
+	out += self->debug_oedit.sizeAllocatedMem();
+	return out;
+}
+
 struct obj::ObjectType GUI::TypeData = {
 	.base = &UI::TypeData,
 	.constructor = (obj::object_constructor) GUI::constructor,
@@ -20,7 +34,8 @@ struct obj::ObjectType GUI::TypeData = {
 	.save_size = (obj::object_save_size) GUI::save_size,
 	.save = (obj::object_save) GUI::save,
 	.load = (obj::object_load) GUI::load,
-	.vtable = &GUI::vtable
+	.vtable = &GUI::vtable,
+	.allocated_size = (obj::object_allocated_size) allocated_size,
 };
 
 struct GUI::Vtable GUI::vtable = {

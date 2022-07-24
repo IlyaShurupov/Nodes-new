@@ -13,6 +13,16 @@ tp::Array<Object*> childs_retrival(Requester* self) {
 	return out;
 }
 
+alni allocated_size(Requester* self) {
+	return sizeof(DictObject*) + sizeof(DictObject*) + sizeof(Operator*);
+}
+
+alni allocated_size_recursive(Requester* self) {
+	alni out = allocated_size(self);
+	out += NDO->objsize_ram_recursive_util(self->callbacks_arguments, self->callbacks_arguments->type);
+	return out;
+}
+
 struct obj::ObjectType Requester::TypeData = {
 	.base = NULL,
 	.constructor = (obj::object_constructor) Requester::constructor,
@@ -23,7 +33,9 @@ struct obj::ObjectType Requester::TypeData = {
 	.save_size = (obj::object_save_size) Requester::save_size,
 	.save = (obj::object_save) Requester::save,
 	.load = (obj::object_load) Requester::load,
-	.childs_retrival = (object_debug_all_childs_retrival) childs_retrival
+	.childs_retrival = (obj::object_debug_all_childs_retrival) childs_retrival,
+	.allocated_size = (obj::object_allocated_size) allocated_size,
+	.allocated_size_recursive = (obj::object_allocated_size_recursive) allocated_size_recursive
 };
 
 void Requester::constructor(Requester* self) {
