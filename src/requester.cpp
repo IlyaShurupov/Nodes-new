@@ -7,23 +7,23 @@ using namespace nd;
 using namespace tp;
 using namespace obj;
 
-tp::Array<Object*> childs_retrival(Requester* self) {
+tp::Array<Object*> childs_retrival(nd::Requester* self) {
 	tp::Array<Object*> out;
 	out.pushBack(self->callbacks_arguments);
 	return out;
 }
 
-alni allocated_size(Requester* self) {
+alni allocated_size(nd::Requester* self) {
 	return sizeof(DictObject*) + sizeof(DictObject*) + sizeof(Operator*);
 }
 
-alni allocated_size_recursive(Requester* self) {
+alni allocated_size_recursive(nd::Requester* self) {
 	alni out = allocated_size(self);
 	out += NDO->objsize_ram_recursive_util(self->callbacks_arguments, self->callbacks_arguments->type);
 	return out;
 }
 
-struct obj::ObjectType Requester::TypeData = {
+struct obj::ObjectType nd::Requester::TypeData = {
 	.base = NULL,
 	.constructor = (obj::object_constructor) Requester::constructor,
 	.destructor = (obj::object_destructor) Requester::destructor,
@@ -59,7 +59,7 @@ alni Requester::save_size(Requester* self) {
 	if (self->op_type) {
 
 		out += sizeof(alni); // dict object adress
-		out += self->op_type->name.save_size(); // type name
+		out += tp::string(self->op_type->name).save_size(); // type name
 
 		// find name of the operator
 		for (auto op : *((nd::TypeOperators*) self->op_type->nodes_custom_data)->getDict()) {
@@ -85,7 +85,7 @@ void Requester::save(Requester* self, File& file_self) {
 	file_self.write<alni>(&ndo_object_adress);
 
 	// save type name
-	self->op_type->name.save(&file_self);
+	tp::string(self->op_type->name).save(&file_self);
 
 	// save op name
 	for (auto op : *((nd::TypeOperators*) self->op_type->nodes_custom_data)->getDict()) {

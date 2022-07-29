@@ -40,8 +40,23 @@
     <ProjectReference Include="..\..\soil\config\soil_static.vcxproj">
       <Project>{2330bd62-8f88-4135-bb43-4740c2d4dc55}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\allocator\cfg\allocator.vcxproj">
+      <Project>{98d6ae72-22f4-4498-ace5-21ad0b4abf0a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\common\cfg\common.vcxproj">
+      <Project>{1500663a-e20c-4ab8-b3aa-78a2cae43d86}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\container\cfg\container.vcxproj">
+      <Project>{ffdd1c2c-9699-44b5-825c-e56eb6274546}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\types\modules\glw\cfg\glw.vcxproj">
       <Project>{89c59fe4-0566-4a6b-b3d5-b6f11076e744}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\math\cfg\math.vcxproj">
+      <Project>{0ca3a8a9-d599-4c36-845f-65591a7be69f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\types\modules\string\cfg\string.vcxproj">
+      <Project>{3dec959d-9484-4bb6-819c-2a8074ea3600}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -148,11 +163,12 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;lunasvg.lib;soil.lib;filesystem.lib;glew32sd.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
     <PostBuildEvent>
       <Command>python $(ProjectDir)install.py $(ProjectDir) $(OutDirFullPath)</Command>
@@ -200,8 +216,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\glw\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\allocator\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\string\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\container\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\types\modules\common\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\imgw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glew\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\glfw\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\types\modules\filesystem\lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\soil\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\lunasvg\lib\$(Platform)\$(Configuration)\;$(ProjectDir)..\..\nanovg\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>nanovg.lib;glw.lib;imgw.lib;lunasvg.lib;soil.lib;filesystem.lib;glew32sd.lib;string.lib;container.lib;opengl32.lib;glfw3.lib;allocator.lib;common.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <SubSystem>Console</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>

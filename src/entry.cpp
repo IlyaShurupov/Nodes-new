@@ -8,6 +8,8 @@ void define_types();
 
 int main(int argc, char* argv[]) {
 
+	tp::alloc_init();
+
 	{
 		obj::objects_init();
 		obj::primitives_define_types();
@@ -50,7 +52,7 @@ int main(int argc, char* argv[]) {
 		obj::objects_finalize();
 	}
 
-	tp::terminate(nd::terminate_code);
+	tp::alloc_uninit();
 }
 
 void define_types() {

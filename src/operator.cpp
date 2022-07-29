@@ -88,6 +88,7 @@ class NodesCoreTypeOperators : public TypeOperators {
 			static void exec(Operator* op, obj::DictObject* args) {
 				tp::string path = getArg<obj::StringObject>(args, "save path")->val;
 				obj::Object* object = getArg<obj::LinkObject>(args, "object")->link;
+				assert(object);
 				bool suc = NDO->save(object, path);
 			}
 		} invoke_callback;
